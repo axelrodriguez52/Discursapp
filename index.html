@@ -3720,6 +3720,7 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
                 document.getElementById('status-dot').className = 'sync-dot offline';
                 document.getElementById('status-text').innerText = 'Error — reconectar';
                 borrarTokenGuardado();
+                try { const _m = (err?.result?.error?.message || err?.message || String(err)).toString().slice(0, 90); const _c = err?.status || err?.result?.error?.code || ''; mostrarToast('⚠️ No se pudo leer la hoja ' + _c + ': ' + _m, 'error'); document.getElementById('status-text').innerText = 'Error ' + _c + ': ' + _m; } catch (_) {}
                 throw err; // re-lanzar para que verificarLibreriasListas pueda manejarlo
             } finally {
                 _isSyncing = false;
