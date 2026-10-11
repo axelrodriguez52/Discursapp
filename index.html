@@ -3328,7 +3328,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
             const tokenGuardado = cargarTokenGuardado();
             if (tokenGuardado) {
                 aplicarTokenAGapi(tokenGuardado);
-                fetch('/api/google/token', {
+                if (!ES_ESTATICO) fetch('/api/google/token', {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: { 'Content-Type': 'application/json' },
@@ -3359,7 +3359,8 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         // La app empaquetada (ventana) abre con ?app=ventana y SIEMPRE usa el proxy:
         // Google no permite iniciar sesión dentro de Electron.
         const ES_VENTANA = /[?&]app=ventana(&|$)/.test(location.search);
-        const IS_NETWORK_MODE = ES_VENTANA || (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1');
+        const ES_ESTATICO = /\.github\.io$/i.test(location.hostname); // hosting estático (GitHub Pages): no hay servidor proxy
+        const IS_NETWORK_MODE = ES_VENTANA || (!ES_ESTATICO && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1');
         if (ES_VENTANA) console.log('[Ventana] App empaquetada — Google Sheets por proxy del servidor');
         else if (IS_NETWORK_MODE) console.log('[Red] Modo red activado para:', location.hostname);
 
@@ -3371,6 +3372,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         };
 
         function enviarTokenAlServidor(access_token, expires_in, tipo) {
+            if (ES_ESTATICO) return Promise.resolve();
             return fetch('/api/google/token', {
                 method: 'POST',
                 credentials: 'same-origin',
