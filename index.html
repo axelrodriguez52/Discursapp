@@ -1,16 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src https:; frame-ancestors 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src https: http:; frame-ancestors 'self';">
     <title>DiscursApp — Circuito 16</title>
     <link rel="icon" type="image/x-icon" href="discursapp.ico">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-    <meta name="theme-color" content="#0071e3">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -164,6 +160,7 @@
         html.dark-mode .cal-week-cell { border-color: var(--border); }
         html.dark-mode .cal-week-cell:hover { background: rgba(10,132,255,0.08) !important; }
         html.dark-mode .mobile-drawer { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .sidebar-backdrop { background: rgba(0,0,0,0.5); }
         html.dark-mode .mobile-actions-toggle { background: var(--bg-card-alt); color: var(--text-2); border-color: var(--border); }
         html.dark-mode .nav-status { background: var(--bg-card-alt); color: var(--text-2); border-color: var(--border); }
         html.dark-mode .badge { background: var(--bg-card-alt); color: var(--text-1); border-color: var(--border); }
@@ -234,6 +231,7 @@
         html.dark-mode .sug-badge-never { background: rgba(191,90,242,0.12); color: #b388ff; }
         html.dark-mode .sug-badge-ok { background: rgba(48,209,88,0.12); color: #69db7c; }
         html.dark-mode .bsq-card.blocked { background: rgba(255,69,58,0.06); }
+        html.dark-mode .bsq-card.selected { background: rgba(10,132,255,0.10); }
         html.dark-mode .btn-block-on:hover { background: rgba(255,69,58,0.15); }
         html.dark-mode .btn-block-off:hover { background: rgba(48,209,88,0.15); }
         html.dark-mode .editor-card { background: var(--bg-card); border-color: var(--border); }
@@ -522,7 +520,7 @@ display: flex; align-items: center; gap: 8px; width: 100%;
         .nav-status { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-3); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
 
         /* SECCIONES DE VISTA */
-        .view-section { display: none; flex: 1; padding: 40px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .view-section { display: none; flex: 1; padding: 20px 16px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .view-section.active { display: block; animation: fadeSlideUp 0.35s var(--ease); }
 
         .view-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
@@ -759,6 +757,15 @@ display: flex; align-items: center; gap: 8px; width: 100%;
         .speaker-card.nr-card:hover { background: #fee2e2; }
         .speaker-card.nd-card { filter: grayscale(100%); opacity: 0.6; }
         .speaker-card.nd-card:hover { filter: grayscale(80%); opacity: 0.8; }
+
+        /* Ausencias */
+        .absence-row { border-left: 3px solid #dc2626 !important; background: #fef2f2 !important; }
+        .absence-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 2px 8px; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: 6px; font-weight: 700; white-space: nowrap; }
+        .btn-absence { padding: 4px 8px; border-radius: 4px; border: 1px solid #fecaca; background: #fef2f2; color: #dc2626; font-size: 10px; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .btn-absence:hover { background: #fee2e2; border-color: #dc2626; }
+        .btn-absence.active { background: #dc2626; color: #fff; border-color: #dc2626; }
+        .btn-absence.active:hover { background: #b91c1c; }
+
         .speaker-rating-select {
             font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px;
             border: 1px solid var(--border); background: var(--bg-card); color: var(--text-1);
@@ -773,10 +780,17 @@ display: flex; align-items: center; gap: 8px; width: 100%;
         .theme-speaker-item:hover { background: var(--accent-dim); color: var(--accent); transform: translateX(4px); }
 
         /* TABLAS */
-        .table-wrap { background: #ffffff; border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow-x: auto; box-shadow: var(--shadow-sm); -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 600px; }
-        thead th { background: #fafafa; padding: 14px 20px; font-weight: 600; font-size: 11px; color: var(--text-2); border-bottom: 0.5px solid var(--border); text-transform: uppercase; letter-spacing: 0.4px; }
-        tbody td { padding: 14px 20px; border-bottom: 0.5px solid var(--border); color: var(--text-1); vertical-align: middle; }
+        .table-wrap { background: #ffffff; border: 0.5px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        #view-aguayo table { table-layout: fixed; }
+        #view-aguayo table th:nth-child(1) { width: 24%; }
+        #view-aguayo table th:nth-child(2) { width: 12%; }
+        #view-aguayo table th:nth-child(3) { width: 12%; }
+        #view-aguayo table th:nth-child(4) { width: 22%; }
+        #view-aguayo table th:nth-child(5) { width: 22%; }
+        #view-aguayo table th:nth-child(6) { width: 8%; text-align: center; }
+        thead th { background: #fafafa; padding: 14px 12px; font-weight: 600; font-size: 11px; color: var(--text-2); border-bottom: 0.5px solid var(--border); text-transform: uppercase; letter-spacing: 0.4px; }
+        tbody td { padding: 12px; border-bottom: 0.5px solid var(--border); color: var(--text-1); vertical-align: middle; }
         tbody tr { transition: background-color 0.15s var(--ease); }
         tbody tr.clickable { cursor: pointer; }
         tbody tr:hover { background: #fafafa; }
@@ -949,6 +963,35 @@ font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid; transitio
         .btn-block-edit { background: var(--bg-card-alt); color: var(--text-2); border-color: var(--border); }
         .btn-block-edit:hover { background: var(--border); }
 
+        /* ── Modo selección múltiple de bosquejos ── */
+        .bsq-card.selectable { cursor: pointer; }
+        .bsq-card.selectable:hover { border-color: var(--accent); }
+        .bsq-card.selected {
+            border-color: var(--accent); background: var(--accent-dim);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+        .bsq-card.selected::after {
+            content: '✓'; position: absolute; top: 10px; right: 12px;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--accent); color: #fff; font-size: 13px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .bsq-sel-chk {
+            width: 18px; height: 18px; accent-color: var(--accent);
+            cursor: pointer; flex-shrink: 0; margin: 0;
+        }
+        .bsq-sel-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--bg-card-alt); border: 1px solid var(--border);
+            border-radius: 8px; padding: 5px 8px; font-size: 11.5px;
+            font-weight: 700; color: var(--text-1); animation: slideUp 0.2s var(--ease);
+        }
+        .bsq-sel-chip button {
+            border: none; background: transparent; color: var(--text-3);
+            cursor: pointer; font-size: 13px; line-height: 1; padding: 0 2px; border-radius: 4px;
+        }
+        .bsq-sel-chip button:hover { color: var(--danger); background: rgba(220,38,38,0.1); }
+
         /* Badges de temas bloqueados en otras pestañas */
         .mini-theme-badge.theme-blocked { background: var(--danger-dim) !important; color: var(--danger) !important; border-color: rgba(255, 59, 48,0.3) !important; font-weight: 700; }
         .theme-num.blocked-num { color: var(--danger) !important; }
@@ -973,6 +1016,88 @@ font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid; transitio
         /* Siempre ocultos en escritorio */
         .mobile-actions-toggle { display: none !important; }
         .mobile-drawer { display: none !important; }
+        .sidebar-toggle { display: none !important; }
+
+        /* RESPONSIVO TABLET (iPad) — sidebar overlay, touch-friendly */
+        @media (min-width: 581px) and (max-width: 1024px) {
+            body { flex-direction: column; }
+            .sidebar {
+                position: fixed; top: 0; left: 0; bottom: 0; z-index: 200;
+                width: 280px; min-width: 280px;
+                transform: translateX(-100%);
+                transition: transform 0.3s var(--ease);
+                box-shadow: none;
+            }
+            .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.15); }
+            .sidebar-backdrop {
+                display: none; position: fixed; inset: 0; z-index: 199;
+                background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+            }
+            .sidebar-backdrop.open { display: block; }
+
+            .sidebar-toggle {
+                display: flex !important; align-items: center; justify-content: center;
+                background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+                padding: 7px 10px; cursor: pointer; color: var(--text-1);
+                min-height: 44px; min-width: 44px; transition: all 0.2s;
+            }
+            .sidebar-toggle:hover { background: var(--bg-card-alt); }
+
+            .mobile-drawer {
+                position: fixed; top: 52px; left: 0; right: 0; max-height: 80vh;
+                background: var(--bg-card); border-bottom: 1px solid var(--border);
+                z-index: 150; padding: 16px; flex-direction: column; gap: 12px;
+                box-shadow: var(--shadow-md); overflow-y: auto;
+            }
+            .mobile-drawer.open { display: flex !important; }
+
+            .view-section { padding: 20px 24px; }
+            .view-header { gap: 14px; margin-bottom: 20px; }
+            .view-title h3 { font-size: 20px; }
+            .search-wrap { max-width: 100%; }
+
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+            .contacts-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .bosquejos-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+            .modal-box { width: 92%; max-height: 88vh; padding: 24px; border-radius: var(--radius-lg); }
+            .info-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .form-grid-2 { grid-template-columns: 1fr 1fr; }
+            .form-grid-4 { grid-template-columns: repeat(4, 1fr); }
+            .disp-grid { grid-template-columns: repeat(2, 1fr); }
+            .reg-grid { grid-template-columns: 1fr 1fr; }
+
+            .filter-item { min-width: 140px; }
+            .btn-print { min-height: 44px; }
+
+            .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            table { min-width: 600px; }
+
+            .nav-active-label { max-width: 220px; font-size: 13px; }
+            .nav-status { display: flex; }
+
+            .stat-mini-card { min-height: 44px; }
+            .stat-card-header { min-height: 44px; padding: 14px 16px; }
+            .tab-btn { min-height: 44px; padding: 10px 14px; }
+            .upload-zone { min-height: 48px; padding: 14px 16px; }
+            .btn-google { min-height: 48px; }
+            .btn-danger { min-height: 48px; }
+
+            .gf-viewport { height: 240px; }
+            .gf-card { width: 160px; padding: 16px 12px; }
+
+            .cal-month-grid { font-size: 11px; }
+            .cal-day { min-height: 70px; }
+            .cal-event-chip { font-size: 10px; padding: 2px 5px; }
+
+            .stats-cards-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+            .stats-summary-bar { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+
+            .cong-header-box { padding: 14px 18px; }
+            .editor-cards-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+        }
 
         /* RESPONSIVO MÓVIL — solo activo bajo 580px */
         @media (max-width: 580px) {
@@ -987,12 +1112,14 @@ font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid; transitio
                 display: flex !important; align-items: center; justify-content: center;
                 background: var(--bg-card-alt); border: 1px solid var(--border);
                 padding: 6px 12px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; cursor: pointer;
+                min-height: 44px;
             }
 
             .mobile-drawer {
-                position: fixed; top: 56px; left: 0; right: 0; background: #fff;
-                border-bottom: 1px solid var(--border); z-index: 150; padding: 16px;
-                flex-direction: column; gap: 12px; box-shadow: var(--shadow-md);
+                position: fixed; top: 52px; left: 0; right: 0; max-height: 80vh;
+                background: var(--bg-card); border-bottom: 1px solid var(--border);
+                z-index: 150; padding: 16px; flex-direction: column; gap: 12px;
+                box-shadow: var(--shadow-md); overflow-y: auto;
             }
             .mobile-drawer.open { display: flex !important; }
 
@@ -1008,7 +1135,18 @@ font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid; transitio
             .info-grid { grid-template-columns: 1fr; gap: 12px; }
 
             .filter-item { min-width: 100%; }
-            .btn-print { width: 100%; justify-content: center; margin-top: 8px; }
+            .btn-print { width: 100%; justify-content: center; margin-top: 8px; min-height: 44px; }
+
+            .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            table { min-width: 500px; }
+
+            .stats-cards-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-card.expanded .stat-card-body { max-height: 1200px; }
+
+            .upload-zone { min-height: 48px; }
+            .btn-google { min-height: 48px; }
+            .btn-danger { min-height: 48px; }
+            .tab-btn { min-height: 44px; }
         }
 
         /* ── ESTADÍSTICAS DASHBOARD ── */
@@ -1352,11 +1490,6 @@ font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid; transitio
             cursor: pointer; transition: all 0.15s;
         }
         .btn-mini:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-
-        @media (max-width: 580px) {
-            .stats-cards-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .stat-card.expanded .stat-card-body { max-height: 1200px; }
-        }
 
         /* ── STAT EXPANDED OVERLAY ── */
         .stat-expanded-overlay {
@@ -2141,15 +2274,6 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
     </style>
 
-    <!-- Instalación como app (PWA) -->
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" type="image/png" href="icon-192.png">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <meta name="theme-color" content="#0071e3">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="DiscursApp">
-
     <!-- ═══ DISEÑO v2: solo estilos (sobrescribe, no modifica lo existente) ═══ -->
     <style id="design-v2">
         /* Fondo ambiental sutil */
@@ -2270,76 +2394,127 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
             #app-splash *, #app-splash { animation-duration: .01s !important; animation-delay: 0s !important; }
         }
     </style>
-    <!-- ═══ ADAPTACIÓN A MÓVILES Y TABLETS: solo estilos (sobrescribe, no modifica lo existente) ═══ -->
-    <style id="responsive-v3">
-        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-        img, svg, video, canvas { max-width: 100%; }
-        .view-header > div[style*="flex-wrap"] { min-width: 0; }
 
-        .mev-row > .mev-field { min-width: 0; }
-        input[type="date"], input[type="time"], input[type="month"], input[type="datetime-local"] { min-width: 0; max-width: 100%; }
-        @media (max-width: 420px) { .mev-row { grid-template-columns: 1fr; } }
+    <!-- ═══ DISEÑO v3: capa de rediseño (solo estilos, sobrescribe v2 y base) ═══ -->
+    <style id="design-v3">
+        /* ───────── 1. FIXES DE BUGS VISUALES ───────── */
+        /* --bg-main estaba sin definir: el overlay de carga salía transparente */
+        :root { --bg-main: #f2f2f7; }
+        html.dark-mode { --bg-main: #0d0d0f; }
+        .loading-overlay { background: rgba(242,242,247,0.86); backdrop-filter: blur(6px) saturate(140%); -webkit-backdrop-filter: blur(6px) saturate(140%); }
+        html.dark-mode .loading-overlay { background: rgba(13,13,15,0.8); }
 
-        /* Tablets (portrait y landscape) */
-        @media (min-width: 581px) and (max-width: 1100px) {
-            .view-section { padding: 22px 24px; }
-            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 14px; }
-            .stats-cards-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
-            .view-header > div[style*="flex-wrap"] { flex: 1 1 100%; }
-            .search-wrap { flex: 1 1 260px; max-width: none; }
-            .view-header select.filter-select { flex: 1 1 190px; min-width: 0 !important; }
-            #rol-summary-bar { gap: 8px 22px !important; }
-            .modal-box { max-width: 640px; }
+        /* @keyframes slideUp no existía pero se usa en varios componentes */
+        @keyframes slideUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform:none; } }
+
+        /* ───────── 2. TOKENS REFINADOS (paleta armonizada) ───────── */
+        :root {
+            /* Texto terciario: sube el contraste de 2.2:1 a un gris utilizable */
+            --text-3:      #86868b;
+            /* Azul de marca tokenizado (antes #38bdf8 suelto, no seguía el dark mode) */
+            --brand-blue:  #38bdf8;
+            /* Púrpura unificado (antes 3 tonos distintos) */
+            --purple:      #7c3aed;
+            --purple-dim:  rgba(124,58,237,0.10);
+            /* Sombras más sobrias y elegantes (menos "flotante") */
+            --shadow-sm:   0 1px 2px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(0,0,0,0.03);
+            --shadow-md:   0 2px 10px rgba(0,0,0,0.05), 0 0 0 0.5px rgba(0,0,0,0.035);
+            --shadow-lg:   0 10px 30px -12px rgba(0,0,0,0.14), 0 0 0 0.5px rgba(0,0,0,0.035);
+            --shadow-glow: 0 6px 22px -8px rgba(0,113,227,0.28);
+        }
+        html.dark-mode {
+            --text-3:      #8e8e93;
+            --brand-blue:  #38bdf8;
+            --purple:      #a78bfa;
+            --purple-dim:  rgba(167,139,250,0.14);
+            --shadow-sm:   0 1px 2px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(255,255,255,0.04);
+            --shadow-md:   0 2px 10px rgba(0,0,0,0.35), 0 0 0 0.5px rgba(255,255,255,0.04);
+            --shadow-lg:   0 10px 30px -12px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.04);
+            --shadow-glow: 0 6px 22px -8px rgba(10,132,255,0.32);
         }
 
-        /* Móviles en vertical */
-        @media (max-width: 580px) {
-            .view-title h3 { font-size: 24px; letter-spacing: -0.6px; }
-            .view-title p { font-size: 12.5px; margin-top: 4px; }
-            .view-header { margin-bottom: 14px; }
-            .view-header > div[style*="flex-wrap"] { width: 100%; gap: 8px !important; }
-            .search-wrap { flex: 1 1 100%; max-width: 100%; }
-            #search-counter { order: 5; flex: 1 1 100%; }
-            .view-header select.filter-select { flex: 1 1 calc(50% - 4px); min-width: 0 !important; width: auto; }
-            #rol-summary-bar { padding: 10px 14px !important; gap: 6px 16px !important; font-size: 12.5px !important; margin-bottom: 14px !important; }
-            .cards-grid { gap: 12px; }
-            .speaker-card { padding: 16px; min-height: 0; border-radius: 20px; gap: 10px; }
-            .card-avatar-placeholder, .card-avatar { width: 46px; height: 46px; }
-            .card-name { font-size: 16px; }
-            .stat-card { border-radius: 18px; }
-            .modal-overlay { align-items: flex-end; }
-            .modal-box { width: 100%; max-width: 100%; border-radius: 24px 24px 0 0; max-height: 92vh; padding: 20px 18px 26px; }
-            .mdd-box { width: 100%; max-width: 100%; }
+        /* ───────── 3. MARCA (usa el token, ahora coherente en dark) ───────── */
+        .brand-icon { box-shadow: 0 6px 16px -6px rgba(0,113,227,0.4), inset 0 1px 0 rgba(255,255,255,0.35); }
+        .brand-text h2 { letter-spacing: -0.5px; }
+        /* La barra del splash ahora sigue el token de marca en ambos temas */
+        .sp-bar::after { background: linear-gradient(90deg, var(--brand-blue), var(--accent)); }
+        .sp-word b { color: var(--accent); }
+
+        /* ───────── 4. SIDEBAR / TOP-NAV / NAVEGACIÓN ───────── */
+        .sidebar { box-shadow: 1px 0 0 rgba(0,0,0,0.03), 6px 0 24px -18px rgba(0,0,0,0.12); }
+        .top-nav { box-shadow: 0 1px 0 var(--border), 0 6px 18px -16px rgba(0,0,0,0.2); }
+        .tab-btn { transition: background .18s var(--ease), color .18s var(--ease), box-shadow .18s var(--ease); }
+        .tab-btn:hover { background: var(--bg-card-alt); }
+        .nav-menu-btn { transition: border-color .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease); }
+
+        /* ───────── 5. TARJETAS (hover más sobrio, radios coherentes) ───────── */
+        .cards-grid { gap: 18px; }
+        .speaker-card { transition: transform .28s var(--ease), box-shadow .28s var(--ease), border-color .28s var(--ease); }
+        .speaker-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04), 0 16px 32px -16px rgba(0,113,227,0.26);
+            border-color: var(--accent-glow); }
+        .speaker-card:active { transform: translateY(-1px) scale(0.995); }
+        .bsq-card, .contact-card, .editor-card, .stat-card, .stats-summary-item, .stat-mini-card {
+            transition: transform .26s var(--ease), box-shadow .26s var(--ease), border-color .26s var(--ease); }
+        .contact-card:hover, .editor-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -16px rgba(0,113,227,0.24); }
+        .bsq-card { transition: transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease); }
+        .bsq-card.selectable:hover { transform: translateY(-1px); }
+
+        /* ───────── 6. BOTONES (jerarquía clara, alturas consistentes) ───────── */
+        button { -webkit-tap-highlight-color: transparent; }
+        .btn-print, .btn-google, .btn-danger, .btn-registrar, .btn-add-evento {
+            border-radius: 12px; transition: transform .18s var(--ease), box-shadow .22s var(--ease), background .18s var(--ease), filter .18s var(--ease); }
+        .btn-print:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .btn-print:active { transform: translateY(0) scale(0.99); }
+        .btn-registrar { transition: transform .2s var(--ease), box-shadow .22s var(--ease), filter .18s var(--ease); }
+        .btn-registrar:hover { transform: translateY(-2px); }
+        .btn-block { transition: transform .16s var(--ease), box-shadow .18s var(--ease), background .16s var(--ease), border-color .16s var(--ease); }
+        .ec-btn { border-radius: 12px; transition: transform .16s var(--ease), background .16s var(--ease), border-color .16s var(--ease); }
+        .ec-btn:hover { transform: translateY(-1px); }
+
+        /* ───────── 7. MODALES (quita el doble blur, radio y sombra coherentes) ───────── */
+        .modal-overlay { backdrop-filter: blur(8px) saturate(130%); -webkit-backdrop-filter: blur(8px) saturate(130%); }
+        .modal-box { border-radius: 24px; box-shadow: 0 24px 64px -24px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(0,0,0,0.04); }
+
+        /* ───────── 8. INPUTS / SELECTS (borde y foco consistentes) ───────── */
+        .search-input, .filter-select, .form-input, .form-textarea, .form-select, .reg-select, .reg-date, .mev-input, .mev-select {
+            transition: border-color .16s var(--ease), box-shadow .16s var(--ease), background .16s var(--ease); }
+        .search-input:focus, .filter-select:focus, .form-input:focus, .form-textarea:focus, .form-select:focus,
+        .reg-select:focus, .reg-date:focus, .mev-input:focus, .mev-select:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+        /* ───────── 9. TABLAS ───────── */
+        .table-wrap { transition: box-shadow .22s var(--ease), border-color .22s var(--ease); }
+
+        /* ───────── 10. BADGES / PILLS (radio coherente + badge-danger que faltaba en claro) ───────── */
+        .badge { border-radius: 8px; }
+        .badge-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(255,59,48,0.2); }
+        .mini-theme-badge, .absence-badge { transition: background .16s var(--ease), color .16s var(--ease); }
+
+        /* ───────── 11. BARRAS DE RESUMEN (aspecto consistente) ───────── */
+        #rol-summary-bar, #bosquejos-summary-bar, #visitas-summary-bar, #month-availability-summary {
+            border: 1px solid var(--border); }
+
+        /* ───────── 12. AJUSTES RESPONSIVE (corrige lo que v2 rompió) ───────── */
+        @media (max-width: 1024px) {
+            .view-title h3 { font-size: 22px; }
             .mobile-drawer { top: 56px; }
         }
-
-        /* Móviles en horizontal (poca altura) */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .top-nav { height: 46px; }
-            .nav-dropdown, .mobile-drawer { top: 46px; }
-            .view-section { padding: 14px 18px; }
-            .view-title h3 { font-size: 22px; }
-            .view-header { margin-bottom: 12px; }
-            .modal-box { max-height: 94vh; padding: 16px 20px; }
-        }
-        @media (max-height: 500px) and (orientation: landscape) and (max-width: 900px) {
-            .cards-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 580px) {
+            .view-title h3 { font-size: 20px; letter-spacing: -0.4px; }
+            .view-title p { font-size: 12.5px; }
+            .mobile-drawer { top: 56px; }
+            .cards-grid { gap: 14px; }
+            .speaker-card { padding: 18px 18px 15px; }
         }
 
-        /* Pantallas táctiles: sin saltos de zoom en campos y zonas de toque cómodas */
-        @media (max-width: 1100px) {
-            input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]), select, textarea { font-size: 16px; }
-            .filter-select, .search-input { min-height: 44px; }
-            .nav-menu-btn, .dark-toggle, .tab-btn { min-height: 44px; }
-        }
-        @media (hover: none) {
-            .speaker-card:hover, .stat-card:hover, .upload-zone:hover { transform: none; }
-            .speaker-card:hover::before { opacity: 0; }
-            .speaker-card:active { transform: scale(0.985); }
-        }
-        @supports (height: 100dvh) {
-            @media (max-width: 580px) { .modal-box, .mdd-box { max-height: 92dvh; } .mobile-drawer { max-height: 80dvh; } }
-            @media (max-height: 500px) and (orientation: landscape) { .modal-box { max-height: 94dvh; } }
+        /* ───────── 13. MOVIMIENTO REDUCIDO ───────── */
+        @media (prefers-reduced-motion: reduce) {
+            .speaker-card, .bsq-card, .contact-card, .editor-card, .stat-card, .stats-summary-item,
+            .btn-print, .btn-registrar, .btn-block, .ec-btn, .tab-btn, .nav-menu-btn, .upload-zone {
+                transition-duration: .01s !important; }
         }
     </style>
 </head>
@@ -2417,6 +2592,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         
         <div class="dev-signature">Designed by Axel Rodriguez</div>
     </aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
     <!-- Loading overlay -->
     <div class="loading-overlay" id="loading-overlay">
@@ -2427,6 +2603,9 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
     <main class="main-content">
         <header class="top-nav">
             <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+                <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
                 <button class="nav-menu-btn" id="nav-menu-btn" onclick="toggleNavMenu()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                     <span class="nav-active-label" id="nav-active-label">Todos los Oradores</span>
@@ -2481,8 +2660,6 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         </nav>
 
         <div class="mobile-drawer" id="mobile-file-drawer">
-            <p class="section-label" style="margin:0 0 -4px;">Congregación Matriz</p>
-            <select id="matriz-cong-selector-mob" class="filter-select" style="width:100%;margin-bottom:8px;"></select>
             <button id="btn-google-login-mob" class="btn-google" onclick="solicitarAccesoGoogle()" style="margin-bottom:8px;">
                 🔑 Conectar Google Sheets
             </button>
@@ -2887,6 +3064,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                     <select id="aguayo-origin-selector" class="filter-select" onchange="renderAguayoView()"><option value="TODOS">— Todos los orígenes —</option></select>
                     <select id="aguayo-month-selector" class="filter-select" onchange="renderAguayoView()"><option value="TODOS">— Todos los meses —</option><option value="enero">Enero</option><option value="febrero">Febrero</option><option value="marzo">Marzo</option><option value="abril">Abril</option><option value="mayo">Mayo</option><option value="junio">Junio</option><option value="julio">Julio</option><option value="agosto">Agosto</option><option value="septiembre">Septiembre</option><option value="octubre">Octubre</option><option value="noviembre">Noviembre</option><option value="diciembre">Diciembre</option></select>
                     <select id="aguayo-dest-selector" class="filter-select" onchange="renderAguayoView()"><option value="TODOS">— Todos los destinos —</option></select>
+                    <button class="btn-print" onclick="abrirRecordatorio()" title="Mensaje de recordatorio al discursante" style="background:var(--accent);">✉️ Recordatorio</button>
                     <button class="btn-print" onclick="exportarCSV('aguayo')" style="background:var(--success);">⬇️ Exportar CSV</button>
                     <button class="btn-print" onclick="window.print()">🖨️ Imprimir Reporte</button>
                 </div>
@@ -2957,6 +3135,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                         <option value="BLOQUEADOS">🔴 Bloqueados</option>
                         <option value="LIBRES">🟢 Libres</option>
                     </select>
+                    <button class="btn-print" id="btn-bsq-selmode" style="min-height:40px;" onclick="toggleBsqSelMode()">☑️ Selección múltiple</button>
                     <button class="btn-print" style="background:var(--danger);min-height:40px;" onclick="clearAllBlockedThemes()">🗑️ Limpiar bloqueos</button>
                     <button class="btn-print" style="min-height:40px;" onclick="exportarBosquejosBloqueadosPDF()">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px;margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -2972,6 +3151,19 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                 <span>📊 Total: <b id="bsq-total">0</b></span>
                 <span style="color:var(--danger);">🔴 Bloqueados: <b id="bsq-blocked">0</b></span>
                 <span style="color:var(--success);">🟢 Libres: <b id="bsq-free">0</b></span>
+            </div>
+
+            <!-- PANEL DE PRESELECCIÓN (modo selección múltiple) -->
+            <div class="preselect-panel" id="bsq-preselect-panel" style="display:none;">
+                <div class="preselect-header">
+                    <h4>☑️ Preselección de bloqueo <span class="preselect-badge" id="bsq-sel-count">0</span></h4>
+                    <button class="preselect-item-remove" onclick="selectVisibleBsq()" title="Seleccionar todos los visibles" style="width:auto;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:700;color:var(--accent);">✓ Seleccionar visibles</button>
+                </div>
+                <div class="preselect-list" id="bsq-sel-list"></div>
+                <div class="preselect-actions">
+                    <button class="preselect-btn-clear" onclick="clearBsqSel()">🗑 Limpiar selección</button>
+                    <button class="preselect-btn-register" id="bsq-bulk-block-btn" onclick="openBulkBloqueoModal()" style="background:var(--danger);border-color:var(--danger) !important;" disabled>🔴 Marcar no disponibles (0)</button>
+                </div>
             </div>
 
             <div class="bosquejos-grid" id="bosquejos-grid">
@@ -2993,6 +3185,26 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
             <div class="modal-box" style="max-width:640px;">
                 <div class="modal-close" onclick="closeSpeakerForm()">&#x2715;</div>
                 <div id="speaker-form-body"></div>
+            </div>
+        </div>
+
+        <!-- MODAL RECORDATORIO DE DISCURSO -->
+        <div class="modal-overlay" id="modal-recordatorio" onclick="if(event.target===this)cerrarRecordatorio()">
+            <div class="modal-box" style="max-width:640px;">
+                <div class="modal-close" onclick="cerrarRecordatorio()">&#x2715;</div>
+                <div class="modal-name" style="margin-bottom:4px;">✉️ Recordatorio de discurso</div>
+                <p style="font-size:12px;color:var(--text-3);margin-bottom:14px;">Busca por nombre y/o fecha, elige la asignación y edita el mensaje si lo necesitas.</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                    <input type="text" id="rec-nombre" class="form-input" placeholder="Buscar discursante…" oninput="recRender()" style="flex:1;min-width:160px;">
+                    <select id="rec-fecha" class="form-select" onchange="recRender()" style="flex:1;min-width:160px;"></select>
+                </div>
+                <div id="rec-lista" style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;"></div>
+                <textarea id="rec-mensaje" class="form-textarea" rows="14" placeholder="Selecciona una asignación para generar el mensaje…" style="width:100%;font-size:13px;line-height:1.5;"></textarea>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:flex-end;">
+                    <button class="btn-print" onclick="recRestablecer()" style="background:var(--text-3);">↺ Restablecer</button>
+                    <button class="btn-print" onclick="recCopiar()">📋 Copiar</button>
+                    <button class="btn-print" onclick="recWhatsApp()" style="background:var(--success);">💬 WhatsApp</button>
+                </div>
             </div>
         </div>
 
@@ -3379,6 +3591,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
 
         // Solicita scope de ESCRITURA solo cuando se va a registrar
         function solicitarTokenEscritura(onSuccess) {
+            if (IS_NETWORK_MODE) { hasWriteToken = true; onSuccess(); return; }
             if (!CLIENT_ID) { mostrarToast('⚠️ Configura las credenciales primero.', 'error'); return; }
             if (!tokenClientWrite) {
                 tokenClientWrite = google.accounts.oauth2.initTokenClient({
@@ -3408,6 +3621,12 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
             const tokenGuardado = cargarTokenGuardado();
             if (tokenGuardado) {
                 aplicarTokenAGapi(tokenGuardado);
+                fetch('/api/google/token', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ access_token: tokenGuardado, expires_in: 3600 })
+                }).then(r => r.json()).then(d => console.log('[Proxy] Token restaurado enviado al servidor:', d)).catch(() => {});
                 document.getElementById('status-text').innerText = 'Restaurando sesión...';
                 cargarDesdeGoogleSheets().catch(() => {
                     // Si falla (token expirado), pedir nuevo token silenciosamente
@@ -3425,6 +3644,130 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
             if (tokenClient) {
                 tokenClient.requestAccessToken({ prompt: 'consent' });
             }
+        }
+
+        // ── PROXY DE GOOGLE SHEETS PARA DISPOSITIVOS DE RED ──
+        // Cuando la app se accede desde una IP de red (no localhost),
+        // se redirigen todas las llamadas a Google Sheets a través del servidor.
+        const IS_NETWORK_MODE = location.hostname !== 'localhost' && location.hostname !== '127.0.0.1';
+        if (IS_NETWORK_MODE) console.log('[Red] Modo red activado para:', location.hostname);
+
+        // En AMBOS modos, enviar token al servidor para que iPad/Android puedan usar el proxy
+        const _origGuardarTokenRelay = guardarToken;
+        guardarToken = function(tokenResponse) {
+            _origGuardarTokenRelay(tokenResponse);
+            fetch('/api/google/token', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ access_token: tokenResponse.access_token, expires_in: tokenResponse.expires_in })
+            }).then(r => r.json()).then(d => console.log('[Proxy] Token enviado al servidor:', d)).catch(e => console.error('[Proxy] Error enviando token:', e));
+        };
+
+        if (IS_NETWORK_MODE) {
+            console.log('[Red] Modo red detectado — Google Sheets se Proxeará por el servidor');
+
+            async function proxySheetsCall(method, apiPath, body) {
+                const resp = await fetch('/api/sheets/proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ method, path: apiPath, body })
+                });
+                const data = await resp.json();
+                if (!data.ok) {
+                    const errMsg = data.error || 'Proxy error del servidor';
+                    if (errMsg.includes('No hay token')) {
+                        mostrarToast('⚠️ Espera: la PC debe conectar Google primero.', 'error');
+                    }
+                    throw { status: data.status || 500, result: { error: { message: errMsg } } };
+                }
+                if (data.status >= 400) {
+                    throw { status: data.status, result: data.result || { error: { message: 'Error de Google API: ' + data.status } } };
+                }
+                return { result: data.result, status: data.status };
+            }
+
+            function installSheetsProxy() {
+                if (!gapi?.client?.sheets?.spreadsheets) return false;
+
+                gapi.client.sheets.spreadsheets.get = async function(args) {
+                    const sid = args.spreadsheetId || args.resource?.spreadsheetId || SPREADSHEET_ID;
+                    return proxySheetsCall('GET', '/v4/spreadsheets/' + sid);
+                };
+
+                gapi.client.sheets.spreadsheets.values.get = async function(args) {
+                    const sid = args.spreadsheetId || SPREADSHEET_ID;
+                    const range = encodeURIComponent(args.range || '');
+                    let url = '/v4/spreadsheets/' + sid + '/values/' + range + '?valueRenderOption=' + (args.valueRenderOption || 'FORMATTED_VALUE');
+                    if (args.majorDimension) url += '&majorDimension=' + args.majorDimension;
+                    return proxySheetsCall('GET', url);
+                };
+
+                gapi.client.sheets.spreadsheets.values.batchGet = async function(args) {
+                    const sid = args.spreadsheetId || SPREADSHEET_ID;
+                    let url = '/v4/spreadsheets/' + sid + '/values:batchGet?valueRenderOption=' + (args.valueRenderOption || 'FORMATTED_VALUE');
+                    if (args.ranges) {
+                        args.ranges.forEach(r => { url += '&ranges=' + encodeURIComponent(r); });
+                    }
+                    return proxySheetsCall('GET', url);
+                };
+
+                gapi.client.sheets.spreadsheets.values.update = async function(args) {
+                    const sid = args.spreadsheetId || SPREADSHEET_ID;
+                    const range = encodeURIComponent(args.range || '');
+                    const url = '/v4/spreadsheets/' + sid + '/values/' + range + '?valueInputOption=' + (args.valueInputOption || 'RAW');
+                    return proxySheetsCall('PUT', url, args.resource || args.body);
+                };
+
+                gapi.client.sheets.spreadsheets.values.batchUpdate = async function(args) {
+                    const sid = args.spreadsheetId || SPREADSHEET_ID;
+                    const url = '/v4/spreadsheets/' + sid + '/values:batchUpdate';
+                    return proxySheetsCall('POST', url, args.resource || args.body);
+                };
+
+                gapi.client.sheets.spreadsheets.values.append = async function(args) {
+                    const sid = args.spreadsheetId || SPREADSHEET_ID;
+                    const range = encodeURIComponent(args.range || '');
+                    const url = '/v4/spreadsheets/' + sid + '/values/' + range + ':append?valueInputOption=' + (args.valueInputOption || 'RAW') + '&insertDataOption=' + (args.insertDataOption || 'INSERT_ROWS');
+                    return proxySheetsCall('POST', url, args.resource || args.body);
+                };
+
+                gapi.client.sheets.spreadsheets.values.batchClear = async function(args) {
+                    const sid = args.spreadsheetId || SPREADSHEET_ID;
+                    const url = '/v4/spreadsheets/' + sid + '/values:batchClear';
+                    return proxySheetsCall('POST', url, args.resource || args.body);
+                };
+
+                gapi.client.sheets.spreadsheets.batchUpdate = async function(args) {
+                    const sid = args.spreadsheetId || SPREADSHEET_ID;
+                    const url = '/v4/spreadsheets/' + sid + ':batchUpdate';
+                    return proxySheetsCall('POST', url, args.resource || args.body);
+                };
+
+                const _origGetToken = gapi.client.getToken.bind(gapi.client);
+                gapi.client.getToken = function() {
+                    return { access_token: 'network-proxy-token', token_type: 'Bearer' };
+                };
+
+                console.log('[Red] Proxy de Google Sheets instalado');
+                return true;
+            }
+
+            const _origCheckLib = verificarLibreriasListas;
+            verificarLibreriasListas = function() {
+                if (gapiIniciado && gisiIniciado) {
+                    installSheetsProxy();
+                    hasWriteToken = true;
+                    document.getElementById('btn-google-login').disabled = false;
+                    document.getElementById('status-text').innerText = 'Conectado (modo red)';
+                    document.getElementById('status-dot').className = 'sync-dot';
+                    document.getElementById('memory-badge').innerText = 'Red Local (proxy del servidor)';
+                    document.getElementById('btn-google-login').textContent = '✓ Modo Red';
+                    const mob = document.getElementById('btn-google-login-mob');
+                    if (mob) { mob.disabled = false; mob.textContent = '✓ Modo Red'; }
+                    cargarDesdeGoogleSheets();
+                }
+            };
         }
 
         // CONTROLADOR DE EXTRACCIÓN SÍNCRONA DE LA HOJA MAESTRA
@@ -3589,6 +3932,19 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
             document.getElementById('mobile-file-drawer').classList.toggle('open');
         }
 
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('open');
+            backdrop.classList.toggle('open');
+        }
+        function closeSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.remove('open');
+            backdrop.classList.remove('open');
+        }
+
         function toggleNavMenu() {
             const btn = document.getElementById('nav-menu-btn');
             const dropdown = document.getElementById('nav-dropdown');
@@ -3615,6 +3971,7 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
         function switchTab(target) {
             document.getElementById('mobile-file-drawer').classList.remove('open');
             closeNavMenu();
+            closeSidebar();
 
             // Visitas redirige a Aguayo
             if (target === 'visitas') {
@@ -4184,6 +4541,75 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
             return Math.floor((Date.now() - d.getTime()) / 86400000);
         }
 
+        // ── PRESELECCIÓN MÚLTIPLE DE BOSQUEJOS (bloqueo masivo) ──
+        let bsqSelMode = false;
+        let bsqSel = new Set();
+        let bsqVisibleKeys = [];
+
+        function toggleBsqSelMode() {
+            bsqSelMode = !bsqSelMode;
+            if (!bsqSelMode) bsqSel.clear();
+            const btn = document.getElementById('btn-bsq-selmode');
+            if (btn) {
+                btn.style.background = bsqSelMode ? 'var(--accent)' : '';
+                btn.style.color = bsqSelMode ? '#fff' : '';
+                btn.style.borderColor = bsqSelMode ? 'var(--accent)' : '';
+                btn.innerHTML = bsqSelMode ? '☑️ Seleccionando…' : '☑️ Selección múltiple';
+            }
+            renderBosquejosView();
+        }
+
+        function toggleBsqSel(key) {
+            if (!bsqSelMode) return;
+            if (bsqSel.has(key)) bsqSel.delete(key); else bsqSel.add(key);
+            renderBosquejosView();
+        }
+
+        function removeBsqSel(key) {
+            bsqSel.delete(key);
+            renderBosquejosView();
+        }
+
+        function selectVisibleBsq() {
+            if (!bsqVisibleKeys.length) { mostrarToast('No hay bosquejos visibles para seleccionar.', 'error'); return; }
+            bsqVisibleKeys.forEach(k => bsqSel.add(k));
+            renderBosquejosView();
+        }
+
+        function clearBsqSel() {
+            if (!bsqSel.size) return;
+            bsqSel.clear();
+            renderBosquejosView();
+        }
+
+        function renderBsqPreselectPanel() {
+            const panel = document.getElementById('bsq-preselect-panel');
+            if (!panel) return;
+            if (!bsqSelMode) { panel.style.display = 'none'; return; }
+            panel.style.display = 'block';
+
+            const countEl = document.getElementById('bsq-sel-count');
+            if (countEl) countEl.textContent = bsqSel.size;
+
+            const list = document.getElementById('bsq-sel-list');
+            if (list) {
+                const keys = Array.from(bsqSel).sort((a, b) => (parseInt(a,10)||0) - (parseInt(b,10)||0));
+                list.innerHTML = keys.length
+                    ? `<div style="display:flex;flex-wrap:wrap;gap:6px;">` + keys.map(k => {
+                        const t = themesMap[k] || '';
+                        return `<span class="bsq-sel-chip">🔴 #${escHtml(k)}${t ? ' · ' + escHtml(t.length > 34 ? t.slice(0,34) + '…' : t) : ''}
+                            <button onclick="event.stopPropagation();removeBsqSel('${k}')" title="Quitar">✕</button></span>`;
+                    }).join('') + `</div>`
+                    : `<div class="preselect-empty">Marca los bosquejos que quieres marcar como no disponibles.</div>`;
+            }
+
+            const btn = document.getElementById('bsq-bulk-block-btn');
+            if (btn) {
+                btn.disabled = !bsqSel.size;
+                btn.textContent = `🔴 Marcar no disponibles (${bsqSel.size})`;
+            }
+        }
+
         function renderBosquejosView() {
             const grid = document.getElementById('bosquejos-grid');
             const search = (document.getElementById('bosquejos-search')?.value || '').trim().toLowerCase();
@@ -4194,6 +4620,8 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
             if (!allNums.length) {
                 grid.innerHTML = `<div class="empty-state"><p>Carga el catálogo PDF de bosquejos para visualizar el listado.</p></div>`;
                 document.getElementById('bosquejos-summary-bar').style.display = 'none';
+                bsqVisibleKeys = [];
+                renderBsqPreselectPanel();
                 return;
             }
 
@@ -4228,15 +4656,23 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
             document.getElementById('bsq-free').textContent = totalAll - totalBlocked;
             document.getElementById('bosquejos-summary-bar').style.display = 'flex';
 
+            // Claves visibles (para "Seleccionar visibles")
+            bsqVisibleKeys = entries.map(e => e.key);
+            renderBsqPreselectPanel();
+
             if (!entries.length) {
                 grid.innerHTML = `<div class="empty-state"><p>Sin bosquejos que coincidan con los filtros.</p></div>`;
                 return;
             }
 
             grid.innerHTML = entries.map(({n, key, title, blocked, info, speakerCount}) => {
-                return `<div class="bsq-card ${blocked ? 'blocked' : ''}">
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                const selected = bsqSelMode && bsqSel.has(key);
+                const stopSel = bsqSelMode ? `event.stopPropagation();` : '';
+                return `<div class="bsq-card ${blocked ? 'blocked' : ''}${bsqSelMode ? ' selectable' : ''}${selected ? ' selected' : ''}"${bsqSelMode ? ` onclick="toggleBsqSel('${key}')"` : ''}>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
                         <span class="bsq-num">Bosquejo #${n}</span>
+                        ${bsqSelMode ? `<span style="display:flex;align-items:center;gap:6px;">
+                        <input type="checkbox" class="bsq-sel-chk" ${selected ? 'checked' : ''} onclick="${stopSel}toggleBsqSel('${key}')" aria-label="Seleccionar bosquejo ${n}"></span>` : ''}
                         ${blocked ? `<span style="font-size:11px;font-weight:700;color:var(--danger);background:var(--danger-dim);padding:2px 8px;border-radius:4px;">🔴 NO DISPONIBLE</span>` : `<span style="font-size:11px;font-weight:700;color:var(--success);background:var(--success-dim);padding:2px 8px;border-radius:4px;">🟢 Libre</span>`}
                     </div>
                     <div class="bsq-title">${title ? escHtml(title) : '<span style="color:var(--text-3);font-style:italic;">Sin título en catálogo</span>'}</div>
@@ -4244,9 +4680,9 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
                     <div class="bsq-speakers" onclick="event.stopPropagation();openBsqTemaDetail('${key}')">🎤 ${speakerCount} orador${speakerCount !== 1 ? 'es' : ''} con este tema →</div>
                     <div class="bsq-actions">
                         ${blocked
-                            ? `<button class="btn-block btn-block-off" onclick="unblockTheme('${key}')">✅ Desbloquear</button>
-                               <button class="btn-block btn-block-edit" onclick="openBloqueoModal('${key}')">✏️ Editar</button>`
-                            : `<button class="btn-block btn-block-on" onclick="openBloqueoModal('${key}')">🔴 Marcar No Disponible</button>`
+                            ? `<button class="btn-block btn-block-off" onclick="${stopSel}unblockTheme('${key}')">✅ Desbloquear</button>
+                               <button class="btn-block btn-block-edit" onclick="${stopSel}openBloqueoModal('${key}')">✏️ Editar</button>`
+                            : `<button class="btn-block btn-block-on" onclick="${stopSel}openBloqueoModal('${key}')">🔴 Marcar No Disponible</button>`
                         }
                     </div>
                 </div>`;
@@ -4404,6 +4840,70 @@ outline:none;box-sizing:border-box;">
 
         function closeBloqueoModal() {
             document.getElementById('modal-bloqueo').classList.remove('active');
+        }
+
+        // ── BLOQUEO MASIVO (preselección) ──
+        function openBulkBloqueoModal() {
+            const keys = Array.from(bsqSel);
+            if (!keys.length) { mostrarToast('Selecciona al menos un bosquejo.', 'error'); return; }
+            const sorted = keys.sort((a,b) => (parseInt(a,10)||0) - (parseInt(b,10)||0));
+            const titles = sorted.map(k => `<span class="bsq-sel-chip">🔴 #${escHtml(k)}${themesMap[k] ? ' · ' + escHtml(themesMap[k].length > 34 ? themesMap[k].slice(0,34) + '…' : themesMap[k]) : ''}</span>`).join('');
+
+            document.getElementById('bloqueo-modal-body').innerHTML = `
+                <div class="modal-role" style="color:var(--danger);">🔴 Bloquear ${sorted.length} bosquejo${sorted.length !== 1 ? 's' : ''}</div>
+                <p style="font-size:13px;color:var(--text-2);margin-bottom:18px;">
+                    Selecciona <b>desde qué mes</b> quedan <b>no disponibles</b> todos los bosquejos de la lista.<br>
+                    Los meses <b>anteriores</b> a ese mes seguirán permitiéndolos.
+                </p>
+
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;max-height:120px;overflow-y:auto;">${titles}</div>
+
+                <div style="margin-bottom:16px;">
+                    <label style="font-size:12px;font-weight:700;color:var(--text-2);display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;">
+                        🗓️ Bloquear desde:
+                    </label>
+                    <select id="bloqueo-from-month" style="background:var(--bg-card-alt);border:1.5px solid var(--border-hi);padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;
+outline:none;min-width:160px;color:var(--text-1);width:100%;">
+                        <option value="TODOS">Todos los meses</option>
+                        ${MESES.map(m => `<option value="${m}">${m} (y meses siguientes)</option>`).join('')}
+                    </select>
+                </div>
+
+                <div id="bloqueo-preview" style="margin-bottom:16px;"></div>
+
+                <div style="margin-bottom:16px;">
+                    <label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:6px;">Motivo (opcional)</label>
+                    <input type="text" id="bloqueo-reason" placeholder="ej: Bosquejo retirado, en revisión..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;
+outline:none;box-sizing:border-box;">
+                </div>
+
+                <div style="display:flex;gap:10px;margin-top:20px;">
+                    <button class="btn-block btn-block-on" style="flex:1;padding:12px;" onclick="confirmBulkBloqueo()">🔴 Confirmar Bloqueo (${sorted.length})</button>
+                    <button class="btn-block btn-block-edit" style="flex:none;padding:12px 18px;" onclick="closeBloqueoModal()">Cancelar</button>
+                </div>
+            `;
+            document.getElementById('modal-bloqueo').classList.add('active');
+            actualizarBloqueoPreview();
+            document.getElementById('bloqueo-from-month').addEventListener('change', actualizarBloqueoPreview);
+        }
+
+        function confirmBulkBloqueo() {
+            const fromMonth = document.getElementById('bloqueo-from-month')?.value || '';
+            const reason = document.getElementById('bloqueo-reason')?.value?.trim() || '';
+            if (!fromMonth) {
+                alert('Selecciona desde qué mes aplicar el bloqueo.');
+                return;
+            }
+            const keys = Array.from(bsqSel);
+            if (!keys.length) { mostrarToast('La selección está vacía.', 'error'); closeBloqueoModal(); return; }
+            keys.forEach(k => { blockedThemes[k] = { fromMonth, reason }; });
+            saveBlockedThemes();
+            closeBloqueoModal();
+            bsqSel.clear();
+            renderBosquejosView();
+            mostrarToast(`✓ ${keys.length} bosquejo${keys.length !== 1 ? 's' : ''} marcado${keys.length !== 1 ? 's' : ''} como no disponible${keys.length !== 1 ? 's' : ''}.`, 'success');
+            const activeTab = document.querySelector('.tab-btn.active')?.dataset?.tab;
+            if (activeTab === 'dashboard') renderCards();
         }
 
         function renderContactosView() {
@@ -5263,6 +5763,23 @@ outline:none;box-sizing:border-box;">
                         onclick: `event.stopPropagation();openTemaDetail('${escJs(num)}')`
                     };
                 });
+            } else if (tipo === 'ausencias') {
+                icon = '🔴';
+                title = 'Ausencias de Oradores';
+                const absent = allAssignments.filter(a => isAbsent(a)).sort((a,b) => (parseStringToDate(b.fecha)||0) - (parseStringToDate(a.fecha)||0));
+                subtitle = `${absent.length} ausencia${absent.length !== 1 ? 's' : ''} registrada${absent.length !== 1 ? 's' : ''}`;
+                rows = absent.map(a => {
+                    const info = getAbsenceInfo(a);
+                    const hasSust = info && info.sustituto;
+                    return {
+                        name: a.nombre,
+                        sub: `${a.origen} → ${a.destino} · ${a.fecha}${hasSust ? ' · Sustituido por ' + info.sustituto.split('|')[0] : ''}${hasSust && info.temaSust ? ' · #' + info.temaSust + ' ' + (themesMap[info.temaSust] || '') : ''}${info && info.motivo ? ' · ' + info.motivo : ''}`,
+                        val: '#' + a.temaNum,
+                        avatarHtml: getPhotoMini(a.nombre, a.origen),
+                        onclick: `event.stopPropagation();openModal('${escJs(a.nombre)}','${escJs(a.origen)}')`
+                    };
+                });
+
             }
 
             const existing = document.querySelector('.stat-expanded-overlay');
@@ -5409,6 +5926,7 @@ outline:none;box-sizing:border-box;">
             const totalTemas = Object.keys(themesMap).length;
             const temasUsados = new Set(allAssignments.map(a => a.temaNum)).size;
             const temasBloq = Object.keys(blockedThemes).length;
+            const totalAusencias = allAssignments.filter(a => isAbsent(a)).length;
 
             if (summaryBar) {
                 summaryBar.style.display = 'grid';
@@ -5418,11 +5936,12 @@ outline:none;box-sizing:border-box;">
                     <div class="stats-summary-item warn" onclick="openStatDetail('asignaciones')"><div class="ss-value">${totalAsigs}</div><div class="ss-label">Asignaciones</div></div>
                     <div class="stats-summary-item purple" onclick="openStatDetail('bosquejos')"><div class="ss-value">${temasUsados}<span style="font-size:13px;font-weight:400;color:var(--text-3)">/${totalTemas}</span></div><div class="ss-label">Bosquejos usados</div></div>
                     <div class="stats-summary-item ${temasBloq > 0 ? 'danger' : ''}" onclick="openStatDetail('bloqueados')"><div class="ss-value">${temasBloq}</div><div class="ss-label">Bloqueados</div></div>
+                    <div class="stats-summary-item ${totalAusencias > 0 ? 'danger' : ''}" onclick="openStatDetail('ausencias')"><div class="ss-value">${totalAusencias}</div><div class="ss-label">Ausencias</div></div>
                 `;
                 if (typeof G !== 'undefined') {
                     G.summaryBar(summaryBar.querySelectorAll('.stats-summary-item'));
                     const vals = summaryBar.querySelectorAll('.ss-value');
-                    const nums = [totalOradores, totalCongs, totalAsigs, temasUsados, temasBloq];
+                    const nums = [totalOradores, totalCongs, totalAsigs, temasUsados, temasBloq, totalAusencias];
                     vals.forEach((el, i) => { if (nums[i] !== undefined) G.numberCount(el, 0, nums[i]); });
                 }
             }
@@ -5496,7 +6015,7 @@ outline:none;box-sizing:border-box;">
                     <div class="stat-preview-row">
                         <span class="stat-preview-pos">${i + 1}.</span>
                         ${r.avatarHtml ? `<span style="flex-shrink:0;">${r.avatarHtml}</span>` : ''}
-                        <span class="stat-preview-name">${escHtml(r.name)}${r.rating ? ' ' + ratingBadgeHtml(r.rating, true) : ''}</span>
+                        <span class="stat-preview-name">${r.nameHtml || escHtml(r.name)}${r.rating ? ' ' + ratingBadgeHtml(r.rating, true) : ''}</span>
                         <span class="stat-preview-val ${colorClass}">${r.val}</span>
                     </div>`).join('') || `<div class="stat-no-data">Sin datos aún</div>`;
 
@@ -5505,8 +6024,7 @@ outline:none;box-sizing:border-box;">
                         <span class="stat-list-pos ${posClass(i)}">${i + 1}</span>
                         ${r.avatarHtml ? `<span style="flex-shrink:0;">${r.avatarHtml}</span>` : ''}
                         <div class="stat-list-info">
-                            <div class="stat-list-name">${escHtml(r.name)}${r.rating ? ' ' + ratingBadgeHtml(r.rating, true) : ''}</div>
-                            ${r.sub ? `<div class="stat-list-sub">${escHtml(r.sub)}</div>` : ''}
+                            <div class="stat-list-name">${r.nameHtml || escHtml(r.name)}${r.rating ? ' ' + ratingBadgeHtml(r.rating, true) : ''}</div>                            ${r.sub ? `<div class="stat-list-sub">${escHtml(r.sub)}</div>` : ''}
                         </div>
                         <span class="stat-list-val ${colorClass}">${r.val}</span>
                         ${r.onclick ? `<span style="font-size:10px;color:var(--accent);margin-left:2px;">→</span>` : ''}
@@ -5711,6 +6229,30 @@ outline:none;box-sizing:border-box;">
             const mesesConHistorial = MESES.filter(m => histPorMes[m].length > 0);
             const totalHist = histMatriz.length;
 
+            // ═══════════════════════════════════════════════
+            //  TARJETA: DISCURSOS PRESENTADOS
+            // ═══════════════════════════════════════════════
+            const hoy = new Date();
+            hoy.setHours(23,59,59,999);
+            const discPresentados = nMatriz
+                ? allAssignments.filter(a => {
+                    if (normalizeStr(a.destino) !== nMatriz) return false;
+                    const d = parseStringToDate(a.fecha);
+                    return d && d <= hoy;
+                }).sort((a, b) => {
+                    const mi = MESES.indexOf(a.mes) - MESES.indexOf(b.mes);
+                    if (mi !== 0) return mi;
+                    return parseStringToDate(a.fecha) - parseStringToDate(b.fecha);
+                })
+                : [];
+
+            const temasPresentados = new Set();
+            discPresentados.forEach(a => {
+                temasPresentados.add(String(a.temaNum).trim());
+                const ai = isAbsent(a) ? getAbsenceInfo(a) : null;
+                if (ai && ai.temaSust) temasPresentados.add(String(ai.temaSust).trim());
+            });
+
             const histRows = [];
             mesesConHistorial.forEach(m => {
                 histPorMes[m].sort((a, b) => parseStringToDate(a.fecha) - parseStringToDate(b.fecha));
@@ -5763,18 +6305,137 @@ outline:none;box-sizing:border-box;">
                             const items = histPorMes[m];
                             return `<div style="margin-bottom:10px;">
                                 <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--accent);margin-bottom:4px;letter-spacing:0.5px;">${escHtml(m)} (${items.length})</div>
-                                ${items.map(a => `
-                                    <div class="stat-list-row" onclick="event.stopPropagation();openModal('${escJs(a.nombre)}','${escJs(a.origen)}')" style="cursor:pointer;">
+                                ${items.map(a => {
+                                    const histAbs = isAbsent(a);
+                                    const histAbsInfo = histAbs ? getAbsenceInfo(a) : null;
+                                    const histHasSust = histAbs && histAbsInfo && histAbsInfo.sustituto;
+                                    const histAbsStyle = histAbs ? (histHasSust ? 'border-left:3px solid #16a34a;background:#f0fdf4;' : 'border-left:3px solid #dc2626;background:#fef2f2;') : '';
+                                    const histAbsInfoHtml = histHasSust ? '<div style="margin-top:2px;display:flex;flex-wrap:wrap;align-items:center;gap:4px;"><span style="display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:1px 5px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;font-weight:700;">🟢 Sust. ' + escHtml(histAbsInfo.sustituto.split('|')[0]) + '</span>' + (histAbsInfo.temaSust ? '<span style="font-size:9px;padding:1px 5px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;border-radius:6px;font-weight:600;">#' + escHtml(histAbsInfo.temaSust) + ' ' + escHtml(themesMap[histAbsInfo.temaSust] || '') + '</span>' : '') + '</div>' : (histAbs ? '<div style="margin-top:2px;"><span style="display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:1px 5px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;font-weight:700;">🔴 Ausente</span></div>' : '');
+                                    return `<div class="stat-list-row" onclick="event.stopPropagation();openModal('${escJs(a.nombre)}','${escJs(a.origen)}')" style="cursor:pointer;${histAbsStyle}${histAbsStyle ? 'padding:8px 10px;border-radius:6px;margin-bottom:4px;' : ''}">
                                         <span style="flex-shrink:0;">${getPhotoMini(a.nombre, a.origen)}</span>
                                         <div class="stat-list-info">
                                             <div class="stat-list-name">${escHtml(a.nombre)} ${ratingBadgeHtml(getSpeakerRating(a.nombre, a.origen), true)}</div>
                                             <div class="stat-list-sub">${escHtml(a.origen)} — ${escHtml(a.fecha)}</div>
+                                            ${histAbsInfoHtml}
                                         </div>
                                         <span class="stat-list-val green">#${escHtml(a.temaNum)}</span>
                                         <span style="font-size:10px;color:var(--accent);margin-left:2px;">→</span>
-                                    </div>`).join('')}
+                                    </div>`;
+                                }).join('')}
                             </div>`;
                         }).join('') : `<div class="stat-no-data">${matrizCong ? 'Sin discursos en ' + escHtml(matrizCong) : 'Configura la congregación matriz para ver el historial'}</div>`}
+                    </div>
+                </div>
+            </div>`;
+
+            const discPresentadosRows = discPresentados.map(a => {
+                const ai = isAbsent(a) ? getAbsenceInfo(a) : null;
+                const hasSust = ai && ai.sustituto;
+                let subText = a.origen + ' → ' + a.fecha;
+                if (hasSust) {
+                    if (ai.temaSust) subText += ' · #' + ai.temaSust + ' ' + (themesMap[ai.temaSust] || '');
+                } else if (ai) {
+                    subText += ' · Ausente' + (ai.motivo ? ' (' + ai.motivo + ')' : '');
+                }
+                const themeLabel = hasSust && ai.temaSust
+                    ? '#' + ai.temaSust + ' ' + (themesMap[ai.temaSust] || '')
+                    : '#' + a.temaNum + ' ' + (themesMap[a.temaNum] || '');
+                let nameHtml = escHtml(a.nombre);
+                if (hasSust) {
+                    const sustName = escHtml(ai.sustituto.split('|')[0]);
+                    nameHtml = '<span style="text-decoration:line-through;opacity:0.5;">' + escHtml(a.nombre) + '</span> <span style="color:var(--success);font-weight:600;">→ ' + sustName + '</span>';
+                }
+                return {
+                    name: hasSust ? ai.sustituto.split('|')[0] : a.nombre,
+                    nameHtml: nameHtml,
+                    sub: subText,
+                    val: themeLabel,
+                    avatarHtml: getPhotoMini(hasSust ? ai.sustituto.split('|')[0] : a.nombre, hasSust ? ai.sustituto.split('|')[1] || a.origen : a.origen),
+                    rating: getSpeakerRating(hasSust ? ai.sustituto.split('|')[0] : a.nombre, hasSust ? ai.sustituto.split('|')[1] || a.origen : a.origen),
+                    onclick: `event.stopPropagation();openModal('${escJs(hasSust ? ai.sustituto.split('|')[0] : a.nombre)}','${escJs(hasSust ? ai.sustituto.split('|')[1] || a.origen : a.origen)}')`
+                };
+            });
+
+            const cardDiscPresentados = buildCard({
+                id: 'stat-discpresentados', accentClass: 'success', colorClass: 'success',
+                title: 'Discursos Presentados',
+                subtitle: matrizCong ? 'Discursos cumplidos en ' + escHtml(matrizCong) : 'Selecciona congregación matriz',
+                totalLabel: discPresentados.length + ' presentado' + (discPresentados.length !== 1 ? 's' : ''),
+                rows: discPresentadosRows
+            });
+
+            // ═══════════════════════════════════════════════
+            //  TARJETA: CALIFICACIONES
+            // ═══════════════════════════════════════════════
+            const speakersByRating = {};
+            RATING_OPTIONS.forEach(opt => { speakersByRating[opt.val] = []; });
+            unique.forEach(s => {
+                const rat = getSpeakerRating(s.nombre, s.congregacion);
+                if (speakersByRating[rat]) {
+                    speakersByRating[rat].push(s);
+                }
+            });
+            Object.keys(speakersByRating).forEach(k => {
+                speakersByRating[k].sort((a, b) => a.nombre.localeCompare(b.nombre));
+            });
+            const totalCalificados = unique.length;
+
+            const calLegendHtml = RATING_OPTIONS.map(opt => {
+                const count = speakersByRating[opt.val] ? speakersByRating[opt.val].length : 0;
+                return `<div style="display:flex;align-items:center;gap:6px;font-size:11px;padding:3px 0;"><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:${opt.color}18;color:${opt.color};border:1px solid ${opt.color}30;font-weight:700;font-size:10px;flex-shrink:0;">${opt.val}</span><span style="flex:1;color:var(--text-2);">${opt.label}</span><span style="font-weight:600;color:var(--text-1);">${count}</span></div>`;
+            }).join('');
+
+            const calGroupedHtml = RATING_OPTIONS.filter(opt => speakersByRating[opt.val].length > 0).map(opt => {
+                const speakers = speakersByRating[opt.val];
+                const speakersHtml = speakers.map(s => {
+                    return `<div class="stat-list-row clickable" onclick="event.stopPropagation();openModal('${escJs(s.nombre)}','${escJs(s.congregacion)}')" style="cursor:pointer;">
+                        <span style="flex-shrink:0;">${getPhotoMini(s.nombre, s.congregacion)}</span>
+                        <div class="stat-list-info">
+                            <div class="stat-list-name">${escHtml(s.nombre)}</div>
+                            <div class="stat-list-sub">${escHtml(s.congregacion)}${s.rol ? ' · ' + escHtml(s.rol) : ''}</div>
+                        </div>
+                        <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:${opt.color}18;color:${opt.color};border:1px solid ${opt.color}30;font-weight:700;font-size:9px;flex-shrink:0;">${opt.val}</span>
+                        <span style="font-size:10px;color:var(--accent);margin-left:2px;">→</span>
+                    </div>`;
+                }).join('');
+                return `<div style="margin-bottom:10px;">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:${opt.color};margin-bottom:4px;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:${opt.color}18;color:${opt.color};border:1px solid ${opt.color}30;font-size:9px;">${opt.val}</span>${opt.label} (${speakers.length})</div>
+                    ${speakersHtml}
+                </div>`;
+            }).join('');
+
+            const cardCalificaciones = `<div class="stat-card" id="stat-calificaciones" onclick="toggleStatCard(this)">
+                <div class="stat-card-header">
+                    <div class="stat-card-header-left">
+                        <div class="stat-card-accent-bar blue"></div>
+                        <div class="stat-card-texts">
+                            <div class="stat-card-title">Calificaciones</div>
+                            <div class="stat-card-subtitle">Oradores organizados por categoría</div>
+                        </div>
+                    </div>
+                    <div class="stat-card-right">
+                        <span class="stat-card-count-pill blue">${totalCalificados} orador${totalCalificados !== 1 ? 'es' : ''}</span>
+                        <span class="stat-card-chevron">▼</span>
+                    </div>
+                </div>
+                <div class="stat-card-preview">
+                    ${RATING_OPTIONS.filter(opt => speakersByRating[opt.val].length > 0).slice(0, 3).map((opt, i) => `
+                        <div class="stat-preview-row">
+                            <span class="stat-preview-pos">${i + 1}.</span>
+                            <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:${opt.color}18;color:${opt.color};border:1px solid ${opt.color}30;font-weight:700;font-size:9px;flex-shrink:0;">${opt.val}</span>
+                            <span class="stat-preview-name">${opt.label}</span>
+                            <span class="stat-preview-val blue">${speakersByRating[opt.val].length}</span>
+                        </div>`).join('') || `<div class="stat-no-data">Sin calificaciones asignadas</div>`}
+                </div>
+                <div class="stat-card-body">
+                    <div class="stat-card-divider"></div>
+                    <div style="padding:12px 18px 8px;">
+                        <div style="font-size:11px;font-weight:700;color:var(--text-1);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Leyenda de categorías</div>
+                        ${calLegendHtml}
+                    </div>
+                    <div class="stat-card-divider"></div>
+                    <div class="stat-card-list">
+                        ${calGroupedHtml || `<div class="stat-no-data">Sin calificaciones asignadas</div>`}
                     </div>
                 </div>
             </div>`;
@@ -6024,6 +6685,7 @@ outline:none;box-sizing:border-box;">
                 const masDeAnno = [];
                 const temasList = Object.entries(themesMap)
                     .filter(([num]) => temasConOrador.has(String(num).trim()))
+                    .filter(([num]) => !temasPresentados.has(String(num).trim()))
                     .map(([num, titulo]) => {
                         const visitas = visitasByTemaLocal.get(String(num).trim()) || [];
                         const fechas = visitas.map(a => parseFechaStr(a.fecha)).filter(Boolean).sort((a,b) => b-a);
@@ -6167,6 +6829,35 @@ outline:none;box-sizing:border-box;">
             </div>`;
 
             // ── Render all stat cards directly in grid ──
+            // ═══════════════════════════════════════════════
+            //  TARJETA: AUSENCIAS
+            // ═══════════════════════════════════════════════
+            const absentSpkMap = {};
+            allAssignments.forEach(a => {
+                if (!isAbsent(a)) return;
+                const k = a.nombre + '|' + a.origen;
+                if (!absentSpkMap[k]) absentSpkMap[k] = { nombre: a.nombre, origen: a.origen, count: 0, asignaciones: [] };
+                absentSpkMap[k].count++;
+                absentSpkMap[k].asignaciones.push(a);
+            });
+            const absentSpks = Object.values(absentSpkMap).sort((a, b) => b.count - a.count);
+            const totalAbsences = absentSpks.reduce((s, x) => s + x.count, 0);
+
+            const cardAusencias = buildCard({
+                id: 'stat-ausencias', accentClass: 'danger', colorClass: 'danger',
+                title: 'Ausencias de Oradores',
+                subtitle: 'Discursantes con asignaciones incumplidas',
+                totalLabel: totalAbsences + ' ausencia' + (totalAbsences !== 1 ? 'es' : ''),
+                rows: absentSpks.map(s => ({
+                    name: s.nombre,
+                    sub: s.origen + ' · Última: ' + s.asignaciones.sort((a,b) => parseStringToDate(b.fecha) - parseStringToDate(a.fecha))[0]?.fecha,
+                    val: s.count + (s.count === 1 ? ' vez' : ' veces'),
+                    avatarHtml: getPhotoMini(s.nombre, s.origen),
+                    rating: getSpeakerRating(s.nombre, s.origen),
+                    onclick: `event.stopPropagation();openModal('${escJs(s.nombre)}','${escJs(s.origen)}')`
+                }))
+            });
+
             const allStatCards = [];
             if (cardSugBosquejos) allStatCards.push({ html: cardSugBosquejos, title: 'Bosquejos Sugeridos', color: 'blue', icon: '💡' });
             if (cardBloqAsignados) allStatCards.push({ html: cardBloqAsignados, title: 'Bloqueados asignados', color: 'danger', icon: '🚫' });
@@ -6176,13 +6867,16 @@ outline:none;box-sizing:border-box;">
                 { html: cardSinBosquejo,  title: 'Discursantes sin bosquejo', color: 'warn',  icon: '📝' },
                 { html: cardHorarios,     title: 'Horarios de Reunión',       color: 'green', icon: '📅' },
                 { html: cardSinUso,        title: 'Oradores sin uso',         color: 'warn',  icon: '👤' },
+                { html: cardAusencias,     title: 'Ausencias',                color: 'danger', icon: '🔴' },
                 { html: cardDuplicadas,    title: 'Asignaciones duplicadas',  color: 'danger', icon: '🔁' },
                 { html: card1,             title: 'Bosquejos más solicitados', color: 'blue',  icon: '📋' },
                 { html: cardBosquejosPorOrador, title: 'Oradores con más bosquejos', color: 'blue', icon: '📚' },
                 { html: card2,             title: 'Oradores más activos',     color: 'warn',  icon: '🎤' },
                 { html: card4,             title: 'Mayor disponibilidad',     color: 'purple', icon: '📅' },
                 { html: cardHistorial,     title: 'Historial de Discursos',   color: 'green', icon: '📜' },
-                { html: cardInvitados,     title: 'Invitados a la Matriz',    color: 'purple', icon: '🎟️' }
+                { html: cardInvitados,     title: 'Invitados a la Matriz',    color: 'purple', icon: '🎟️' },
+                { html: cardDiscPresentados, title: 'Discursos Presentados',  color: 'green',  icon: '📣' },
+                { html: cardCalificaciones, title: 'Calificaciones',         color: 'blue',   icon: '🏷️' }
             );
             window._statCards = allStatCards;
 
@@ -6376,7 +7070,7 @@ outline:none;box-sizing:border-box;">
                 const blockedBadge = blocked ? `<span style="font-size:11px;font-weight:700;color:var(--danger);background:var(--danger-dim);padding:2px 8px;border-radius:4px;margin-left:8px;">🔴 NO DISPONIBLE</span>` : '';
                 const binfo = blockedThemes[num];
                 const blockDetail = blocked ? `<div style="font-size:11.5px;color:#c0392b;background:var(--danger-dim);border-radius:6px;padding:6px 10px;margin-top:8px;">🚫 ${binfo?.fromMonth === 'TODOS' ? 'Bloqueado todos los meses' : `Bloqueado desde ${binfo?.fromMonth || '?'} en adelante`}${binfo?.reason ? ` — "${escHtml(binfo.reason)}"` : ''}</div>` : '';
-                html += `<div class="speaker-card theme-card ${blocked ? 'blocked' : ''}" style="${blocked ? 'border-left-color:var(--danger);background:var(--danger-dim);' : ''}"><div><div class="card-role">Bosquejo${blockedBadge}</div><div class="card-name" style="color:${blocked ? 'var(--danger)' : 'var(--accent)'};">#${num}</div><div class="card-cong" style="font-weight:500;color:var(--text-1);">${escHtml(themesMap[num])}</div>${blockDetail}</div><div class="theme-speakers-list">${sps.length ? `<p>Oradores disponibles:</p>${sps.map(s => `<div class="theme-speaker-item" data-nombre="${escHtml(s.nombre)}" data-cong="${escHtml(s.congregacion)}"><span>👤 ${escHtml(s.nombre)}</span><span style="font-size:11px;color:var(--text-3);">${escHtml(s.congregacion)}</span></div>`).join('')}` : '<p>Ninguno listo con este tema</p>'}</div></div>`;
+                html += `<div class="speaker-card theme-card ${blocked ? 'blocked' : ''}" style="${blocked ? 'border-left-color:var(--danger);background:var(--danger-dim);' : ''}"><div><div class="card-role">Bosquejo${blockedBadge}</div><div class="card-name" style="color:${blocked ? 'var(--danger)' : 'var(--accent)'};">#${num}</div><div class="card-cong" style="font-weight:500;color:var(--text-1);">${escHtml(themesMap[num])}</div>${blockDetail}</div><div class="theme-speakers-list">${sps.length ? `<p>Oradores disponibles: <span class="badge badge-accent">${sps.length}</span></p>${sps.map(s => `<div class="theme-speaker-item" data-nombre="${escHtml(s.nombre)}" data-cong="${escHtml(s.congregacion)}"><span>👤 ${escHtml(s.nombre)}</span><span style="font-size:11px;color:var(--text-3);">${escHtml(s.congregacion)}</span></div>`).join('')}` : '<p>Ninguno listo con este tema</p>'}</div></div>`;
             });
 
             unique.filter(s => (fuzzyMatch(term, s.nombre) || fuzzyMatch(term, s.congregacion)) && (!rolFilter || s.rol?.trim().toLowerCase() === rolFilter) && (!congFilter || s.congregacion?.trim() === congFilter)).forEach(s => {
@@ -6518,12 +7212,264 @@ outline:none;box-sizing:border-box;">
         function ratingBadgeHtml(val, small) {
             const info = getRatingInfo(val);
             const fs = small ? '9px' : '10px';
-            const pad = small ? '1px 5px' : '2px 7px';
+            const sz = small ? '20px' : '24px';
             const bg = info.val === 'NR' ? '#fef2f2' : info.color + '18';
-            return `<span class="speaker-rating-badge" style="font-size:${fs};padding:${pad};color:${info.color};background:${bg};border:1px solid ${info.color}30;border-radius:4px;font-weight:700;white-space:nowrap;vertical-align:middle;">${info.val}</span>`;
+            return `<span class="speaker-rating-badge" style="font-size:${fs};width:${sz};height:${sz};display:inline-flex;align-items:center;justify-content:center;color:${info.color};background:${bg};border:1px solid ${info.color}30;border-radius:50%;font-weight:700;white-space:nowrap;vertical-align:middle;flex-shrink:0;">${info.val}</span>`;
         }
 
         // ══════════════════════════════════════════════════════════════
+        //  AUSENCIAS DE ORADORES — almacenamiento local
+        // ══════════════════════════════════════════════════════════════
+        const ABSENCES_KEY = 'discursapp_speaker_absences';
+        let speakerAbsences = {};
+        try {
+            const savedA = localStorage.getItem(ABSENCES_KEY);
+            if (savedA) speakerAbsences = JSON.parse(savedA);
+        } catch(e) { speakerAbsences = {}; }
+
+        function getAssignmentKey(a) {
+            return [a.nombre, a.origen, a.destino, a.fecha, a.temaNum].join('|');
+        }
+
+        function isAbsent(a) {
+            return !!speakerAbsences[getAssignmentKey(a)];
+        }
+
+        function getAbsenceInfo(a) {
+            return speakerAbsences[getAssignmentKey(a)] || null;
+        }
+
+        function isSubstituted(a) {
+            const info = getAbsenceInfo(a);
+            return !!(info && info.sustituto);
+        }
+
+        function toggleAbsence(a, motivo, sustituto, temaSust) {
+            const k = getAssignmentKey(a);
+            if (speakerAbsences[k]) {
+                delete speakerAbsences[k];
+            } else {
+                speakerAbsences[k] = {
+                    date: new Date().toISOString(),
+                    motivo: motivo || '',
+                    sustituto: sustituto || '',
+                    temaSust: temaSust || ''
+                };
+            }
+            try { localStorage.setItem(ABSENCES_KEY, JSON.stringify(speakerAbsences)); } catch(e) {}
+        }
+
+        function setAbsenceSubstitute(a, sustituto) {
+            const k = getAssignmentKey(a);
+            if (speakerAbsences[k]) {
+                speakerAbsences[k].sustituto = sustituto || '';
+                try { localStorage.setItem(ABSENCES_KEY, JSON.stringify(speakerAbsences)); } catch(e) {}
+            }
+        }
+
+        function getSpeakerAbsences(nombre, origen) {
+            return allAssignments.filter(a =>
+                normalizeStr(a.nombre) === normalizeStr(nombre) &&
+                normalizeStr(a.origen) === normalizeStr(origen) &&
+                isAbsent(a)
+            );
+        }
+
+        function getAbsenceCount(nombre, origen) {
+            return getSpeakerAbsences(nombre, origen).length;
+        }
+
+        function absenceBadgeHtml(count) {
+            if (!count) return '';
+            return `<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;font-weight:700;white-space:nowrap;">🔴 ${count} ausencia${count !== 1 ? 'es' : ''}</span>`;
+        }
+
+        
+
+        
+        function getSpeakerThemesByName(nombre, congregacion) {
+            var found = null;
+            var all = getUnique();
+            for (var i = 0; i < all.length; i++) {
+                if (normalizeStr(all[i].nombre) === normalizeStr(nombre) && normalizeStr(all[i].congregacion) === normalizeStr(congregacion)) {
+                    found = all[i];
+                    break;
+                }
+            }
+            if (!found) {
+                var gs = globalSpeakers;
+                for (var j = 0; j < gs.length; j++) {
+                    if (normalizeStr(gs[j].nombre) === normalizeStr(nombre) && normalizeStr(gs[j].congregacion) === normalizeStr(congregacion)) {
+                        found = gs[j];
+                        break;
+                    }
+                }
+            }
+            return found && found.temas ? found.temas : [];
+        }
+
+        function buildTemaSelectOptions(themes, selectedVal) {
+            var html = '<option value="">— Sin bosquejo —</option>';
+            for (var i = 0; i < themes.length; i++) {
+                var t = themes[i];
+                var label = '#' + t + (themesMap[t] ? ' — ' + themesMap[t] : '');
+                var sel = (String(t) === String(selectedVal)) ? ' selected' : '';
+                html += '<option value="' + escHtml(String(t)) + '"' + sel + '>' + escHtml(label) + '</option>';
+            }
+            return html;
+        }
+
+        function onAbsenceSustitutoChange() {
+            var sustEl = document.getElementById('absence-sustituto') || document.getElementById('absence-sust-edit');
+            var temaEl = document.getElementById('absence-tema-sust') || document.getElementById('absence-tema-sust-edit');
+            if (!sustEl || !temaEl) return;
+            var val = sustEl.value;
+            if (!val) { temaEl.innerHTML = '<option value="">— Sin bosquejo —</option>'; return; }
+            var parts = val.split('|');
+            var themes = getSpeakerThemesByName(parts[0], parts[1]);
+            var currentTema = temaEl.value;
+            temaEl.innerHTML = buildTemaSelectOptions(themes, currentTema);
+        }
+
+        function showAbsenceModal(a) {
+            window._absenceTarget = a;
+            var modal = document.getElementById('modal');
+            var body = document.getElementById('modal-body');
+            if (!modal || !body) return;
+            var prevContent = body.innerHTML;
+            window._prevAbsenceContent = prevContent;
+            var info = getAbsenceInfo(a);
+            var existing = !!info;
+            var speakers = getUnique().filter(function(s) {
+                return !(normalizeStr(s.nombre) === normalizeStr(a.nombre) && normalizeStr(s.congregacion) === normalizeStr(a.origen));
+            });
+            var selOpts = '';
+            for (var i = 0; i < speakers.length; i++) {
+                var sp = speakers[i];
+                var spVal = escHtml(sp.nombre) + '|' + escHtml(sp.congregacion);
+                var spLabel = escHtml(sp.nombre) + ' (' + escHtml(sp.congregacion) + ')';
+                var selected = (info && info.sustituto === sp.nombre + '|' + sp.congregacion) ? ' selected' : '';
+                selOpts += '<option value="' + spVal + '"' + selected + '>' + spLabel + '</option>';
+            }
+            var sustLabel = (info && info.sustituto) ? '🟢 Sustituido' : '🔴 Ausente';
+            var html = '<div style="max-width:420px;">';
+            html += '<h3 style="margin:0 0 12px;font-size:16px;color:var(--text-1);">' + (existing ? '📋 Detalle de Ausencia' : '🔴 Marcar Ausencia') + '</h3>';
+            html += '<div style="background:var(--bg-card-alt);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;">';
+            html += '<div style="font-weight:600;font-size:13px;">' + escHtml(a.nombre) + '</div>';
+            html += '<div style="font-size:12px;color:var(--text-2);">' + escHtml(a.origen) + ' → ' + escHtml(a.destino) + '</div>';
+            html += '<div style="font-size:12px;color:var(--text-2);">' + escHtml(a.fecha) + ' · #' + escHtml(a.temaNum) + '</div>';
+            html += '</div>';
+            if (existing) {
+                var fDate = info.date ? new Date(info.date).toLocaleDateString('es-ES') : '—';
+                html += '<div style="font-size:12px;color:var(--text-2);margin-bottom:6px;">Marcada: ' + fDate + (info.motivo ? ' · Motivo: ' + escHtml(info.motivo) : '') + '</div>';
+                html += '<div style="font-size:12px;font-weight:600;margin-bottom:10px;">Estado: ' + sustLabel + (info.sustituto ? ' → ' + escHtml(info.sustituto.split('|')[0]) : '') + '</div>';
+                html += '<div style="margin-bottom:10px;">';
+                html += '<label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:4px;">Motivo</label>';
+                html += '<input id="absence-motivo-edit" type="text" value="' + escHtml(info.motivo || '') + '" placeholder="Ej: Enfermedad, viaje..." style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;box-sizing:border-box;">';
+                html += '</div>';
+                html += '<div style="margin-bottom:12px;">';
+                html += '<label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:4px;">Sustituto</label>';
+                html += '<select id="absence-sust-edit" onchange="onAbsenceSustitutoChange()" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;box-sizing:border-box;">';
+                html += '<option value="">— Sin sustituto —</option>';
+                html += selOpts;
+                html += '</select>';
+                html += '</div>';
+                html += '<div style="margin-bottom:12px;">';
+                html += '<label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:4px;">Bosquejo del sustituto</label>';
+                var temasSust = [];
+                if (info && info.sustituto) {
+                    var sustParts = info.sustituto.split('|');
+                    temasSust = getSpeakerThemesByName(sustParts[0], sustParts[1]);
+                }
+                html += '<select id="absence-tema-sust-edit" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;box-sizing:border-box;">';
+                html += buildTemaSelectOptions(temasSust, info ? info.temaSust : '');
+                html += '</select>';
+                html += '</div>';
+                html += '<div style="display:flex;gap:8px;">';
+                html += '<button onclick="saveAbsenceEdit()" style="flex:1;padding:8px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer;">💾 Guardar</button>';
+                html += '<button onclick="removeAbsence()" style="flex:1;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);font-size:12px;font-weight:600;cursor:pointer;">↩ Quitar ausencia</button>';
+                html += '<button onclick="closeModal()" style="flex:1;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);font-size:12px;font-weight:600;cursor:pointer;">Cerrar</button>';
+                html += '</div>';
+            } else {
+                html += '<div style="margin-bottom:10px;">';
+                html += '<label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:4px;">Motivo (opcional)</label>';
+                html += '<input id="absence-motivo" type="text" placeholder="Ej: Enfermedad, viaje, emergencia..." style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;box-sizing:border-box;">';
+                html += '</div>';
+                html += '<div style="margin-bottom:12px;">';
+                html += '<label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:4px;">Sustituto (opcional)</label>';
+                html += '<select id="absence-sustituto" onchange="onAbsenceSustitutoChange()" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;box-sizing:border-box;">';
+                html += '<option value="">— Sin sustituto —</option>';
+                html += selOpts;
+                html += '</select>';
+                html += '</div>';
+                html += '<div style="margin-bottom:12px;" id="absence-tema-sust-wrap">';
+                html += '<label style="font-size:12px;font-weight:600;color:var(--text-2);display:block;margin-bottom:4px;">Bosquejo del sustituto</label>';
+                html += '<select id="absence-tema-sust" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;box-sizing:border-box;">';
+                html += '<option value="">— Sin bosquejo —</option>';
+                html += '</select>';
+                html += '</div>';
+                html += '<div style="display:flex;gap:8px;">';
+                html += '<button onclick="confirmMarkAbsence()" style="flex:1;padding:8px;border-radius:var(--radius-sm);border:none;background:#dc2626;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">🔴 Confirmar Ausencia</button>';
+                html += '<button onclick="closeModal()" style="flex:1;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);font-size:12px;font-weight:600;cursor:pointer;">Cancelar</button>';
+                html += '</div>';
+            }
+            html += '</div>';
+            body.innerHTML = html;
+            modal.classList.add('active');
+        }
+
+        function confirmMarkAbsence() {
+            var a = window._absenceTarget;
+            if (!a) return;
+            var motivoEl = document.getElementById('absence-motivo');
+            var sustEl = document.getElementById('absence-sustituto');
+            var temaEl = document.getElementById('absence-tema-sust');
+            var motivo = motivoEl ? motivoEl.value.trim() : '';
+            var sustRaw = sustEl ? sustEl.value : '';
+            var temaSust = temaEl ? temaEl.value : '';
+            toggleAbsence(a, motivo, sustRaw, temaSust);
+            closeModal();
+            var sustName = sustRaw ? sustRaw.split('|')[0] : '';
+            mostrarToast(sustRaw ? '🟢 Ausencia con sustituto: ' + sustName : '🔴 Ausencia registrada: ' + a.nombre, sustRaw ? 'success' : 'warn');
+            renderAguayoView();
+            renderVisitasView();
+            if (typeof renderEstadisticasDashboard === 'function') renderEstadisticasDashboard();
+        }
+
+        function saveAbsenceEdit() {
+            var a = window._absenceTarget;
+            if (!a) return;
+            var motivoEl = document.getElementById('absence-motivo-edit');
+            var sustEl = document.getElementById('absence-sust-edit');
+            var temaEl = document.getElementById('absence-tema-sust-edit');
+            var motivo = motivoEl ? motivoEl.value.trim() : '';
+            var sustRaw = sustEl ? sustEl.value : '';
+            var temaSust = temaEl ? temaEl.value : '';
+            var k = getAssignmentKey(a);
+            if (speakerAbsences[k]) {
+                speakerAbsences[k].motivo = motivo;
+                speakerAbsences[k].sustituto = sustRaw;
+                speakerAbsences[k].temaSust = temaSust;
+                try { localStorage.setItem(ABSENCES_KEY, JSON.stringify(speakerAbsences)); } catch(e) {}
+            }
+            closeModal();
+            mostrarToast('Ausencia actualizada', 'success');
+            renderAguayoView();
+            renderVisitasView();
+            if (typeof renderEstadisticasDashboard === 'function') renderEstadisticasDashboard();
+        }
+
+        function removeAbsence() {
+            var a = window._absenceTarget;
+            if (!a) return;
+            toggleAbsence(a, '', '');
+            closeModal();
+            mostrarToast('Ausencia eliminada', 'success');
+            renderAguayoView();
+            renderVisitasView();
+            if (typeof renderEstadisticasDashboard === 'function') renderEstadisticasDashboard();
+        }
+
         //  RECORTADOR DE IMAGEN — estado interno
         // ══════════════════════════════════════════════════════════════
         const _crop = {
@@ -8113,6 +9059,7 @@ outline:none;box-sizing:border-box;">
             
             tbody.innerHTML = filtered.length ? filtered.map(a => {
                 const targetUrl = "https://hub.jw.org/meetings/es?q=%7B%22meetingType%22:%22meetings%22,%22location%22:%22Su%20ubicaci%C3%B3n%22,%22useCurrentLocation%22:true%7D";
+                const idx = allAssignments.indexOf(a);
                 return `<tr>
                     <td><div style="display:flex;align-items:center;gap:8px;">${getPhotoMini(a.nombre,a.origen)}<b style="cursor:pointer;color:var(--accent);text-decoration:none;" onclick="openModal('${escJs(a.nombre)}','${escJs(a.origen)}')">${escHtml(a.nombre)}</b>${ratingBadgeHtml(getSpeakerRating(a.nombre,a.origen),true)}</div></td>
                     <td>${escHtml(a.origen)}</td>
@@ -8124,9 +9071,9 @@ outline:none;box-sizing:border-box;">
                     <td><span class="badge badge-warn">${escHtml(a.fecha)}</span> <small>${escHtml(a.hora)}</small></td>
                     <td><b>#${escHtml(a.temaNum)}</b> <div style="font-size:11px;color:var(--text-2);">${escHtml(themesMap[a.temaNum] || '')}</div></td>
                     <td class="col-acciones" style="text-align:center;">
-                        <button onclick="confirmarEliminarAsignacion(${allAssignments.indexOf(a)})" title="Eliminar asignación" style="background:var(--danger-dim);border:1px solid var(--danger);color:var(--danger);width:30px;height:30px;border-radius:var(--radius-sm);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14H7L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
-                        </button>
+                        ${normalizeStr(a.destino) === normalizeStr(matrizCong) ? `<button onclick="confirmarEliminarAsignacion(${idx})" title="Eliminar asignación" style="background:var(--danger-dim);border:1px solid var(--danger);color:var(--danger);width:28px;height:28px;border-radius:var(--radius-sm);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14H7L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+                        </button>` : ''}
                     </td>
                 </tr>`;
             }).join('') : `<tr><td colspan="6" style="text-align:center;padding:24px;">Sin asignaciones que coincidan con los filtros aplicados.</td></tr>`;
@@ -8148,6 +9095,83 @@ outline:none;box-sizing:border-box;">
             if (!filtered.length) { bar.style.display = 'none'; btnPrint.style.display = 'none'; content.innerHTML = '<div class="empty-state"><p>Sin visitas entrantes en este periodo.</p></div>'; return; }
             bar.style.display = 'block'; bar.innerHTML = `<p><b>${escHtml(c)}</b> — ${filtered.length} visitas asignadas en el periodo.</p>`;
             content.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Orador</th><th>Origen</th><th>Fecha / Hora</th><th>Bosquejo</th></tr></thead><tbody>${filtered.map(a=>`<tr><td><div style="display:flex;align-items:center;gap:8px;">${getPhotoMini(a.nombre,a.origen)}<b>${escHtml(a.nombre)}</b>${ratingBadgeHtml(getSpeakerRating(a.nombre,a.origen),true)}</div></td><td>${escHtml(a.origen)}</td><td><span class="badge badge-warn">${escHtml(a.fecha)}</span> <small>${escHtml(a.hora)}</small></td><td><b>#${escHtml(a.temaNum)}</b><div style="font-size:11px;color:var(--text-2);">${escHtml(themesMap[a.temaNum]||'')}</div></td></tr>`).join('')}</tbody></table></div>`;
+        }
+
+        // ── RECORDATORIO DE DISCURSO (mensaje estándar editable) ──
+        let _recLista = [], _recSel = null;
+        function _recAsignaciones() {
+            const nM = normalizeStr(matrizCong);
+            return allAssignments.filter(a => !nM || normalizeStr(a.origen) === nM)
+                .sort((a, b) => parseStringToDate(a.fecha) - parseStringToDate(b.fecha));
+        }
+        function abrirRecordatorio() {
+            _recSel = null;
+            const fechas = [...new Set(_recAsignaciones().map(a => a.fecha))];
+            document.getElementById('rec-fecha').innerHTML = '<option value="">— Todas las fechas —</option>' +
+                fechas.map(f => `<option value="${escHtml(f)}">${escHtml(f)}</option>`).join('');
+            document.getElementById('rec-nombre').value = '';
+            document.getElementById('rec-mensaje').value = '';
+            recRender();
+            document.getElementById('modal-recordatorio').classList.add('active');
+        }
+        function cerrarRecordatorio() {
+            document.getElementById('modal-recordatorio').classList.remove('active');
+        }
+        function recRender() {
+            const q = document.getElementById('rec-nombre').value.toLowerCase().trim();
+            const f = document.getElementById('rec-fecha').value;
+            _recLista = _recAsignaciones().filter(a => (!q || fuzzyMatch(q, a.nombre)) && (!f || a.fecha === f));
+            const box = document.getElementById('rec-lista');
+            box.innerHTML = _recLista.length ? _recLista.map((a, i) => `
+                <div onclick="recSeleccionar(${i})" style="padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px;${_recSel === a ? 'background:var(--accent-glow);' : ''}">
+                    <b>${escHtml(a.nombre)}</b> · <span class="badge badge-warn">${escHtml(a.fecha)}</span>
+                    <div style="font-size:11px;color:var(--text-2);">📍 ${escHtml(a.destino)} · #${escHtml(a.temaNum)} ${escHtml(themesMap[a.temaNum] || '')}</div>
+                </div>`).join('') : '<div style="padding:16px;text-align:center;font-size:12px;color:var(--text-3);">Sin asignaciones que coincidan.</div>';
+        }
+        function recApellido(n) {
+            n = (n || '').trim();
+            if (n.includes(',')) return n.split(',')[0].trim();
+            const p = n.split(/\s+/);
+            return p[p.length - 1];
+        }
+        function recConstruir(a) {
+            const cong = matrizCong || a.origen;
+            let enc = contactsMap[normalizeStr(cong)]?.encargado || '';
+            if (/^(no definido|no registrado|—)$/i.test(enc.trim())) enc = '';
+            const tema = themesMap[a.temaNum] ? `${themesMap[a.temaNum]} (N.º ${a.temaNum})` : `Bosquejo N.º ${a.temaNum}`;
+            const hora = a.hora && a.hora !== '—' ? a.hora : '';
+            return `Estimado hermano ${recApellido(a.nombre)}\n\n` +
+                `Esto es para recordarte que vas a presentar el siguiente discurso:\n\n` +
+                `Tema: ${tema}\n\n` +
+                `Fecha: ${a.fecha}\n` +
+                `Hora: ${hora}\n\n` +
+                `Congregación: ${cong}\n\n` +
+                `Enviar imágenes y canción unos días antes de la fecha del discurso.\n\n` +
+                `Gracias por tu ayuda.\n\n` +
+                `Con amor cristiano,\n${enc}`;
+        }
+        function recSeleccionar(i) {
+            _recSel = _recLista[i] || null;
+            document.getElementById('rec-mensaje').value = _recSel ? recConstruir(_recSel) : '';
+            recRender();
+        }
+        function recRestablecer() {
+            if (_recSel) document.getElementById('rec-mensaje').value = recConstruir(_recSel);
+        }
+        async function recCopiar() {
+            const t = document.getElementById('rec-mensaje').value;
+            if (!t.trim()) { mostrarToast('Selecciona una asignación primero.', 'error'); return; }
+            try { await navigator.clipboard.writeText(t); }
+            catch (e) { const el = document.getElementById('rec-mensaje'); el.select(); document.execCommand('copy'); }
+            mostrarToast('✓ Mensaje copiado.', 'success');
+        }
+        function recWhatsApp() {
+            const t = document.getElementById('rec-mensaje').value;
+            if (!t.trim()) { mostrarToast('Selecciona una asignación primero.', 'error'); return; }
+            const sp = _recSel && globalSpeakers.find(s => normalizeStr(s.nombre) === normalizeStr(_recSel.nombre) && normalizeStr(s.congregacion) === normalizeStr(_recSel.origen));
+            let tel = ((sp && sp.telefono) || '').replace(/\D/g, '');
+            if (tel.length === 10) tel = '1' + tel;
+            window.open(`https://wa.me/${tel.length >= 11 ? tel : ''}?text=${encodeURIComponent(t)}`, '_blank');
         }
 
         // Helper compartido: construye el HTML del modal de un discursante
@@ -8177,6 +9201,7 @@ outline:none;box-sizing:border-box;">
                             ${RATING_OPTIONS.map(opt => `<option value="${opt.val}" ${getSpeakerRating(s.nombre, s.congregacion) === opt.val ? 'selected' : ''}>${opt.label}</option>`).join('')}
                         </select>
                         <span>${ratingBadgeHtml(getSpeakerRating(s.nombre, s.congregacion), false)}</span>
+                        ${absenceBadgeHtml(getAbsenceCount(s.nombre, s.congregacion))}
                     </div>
                     ${photoSrc ? `<button onclick="removePhoto('${photoKey}')" style="margin-top:6px;font-size:11px;color:var(--danger);background:none;border:none;cursor:pointer;padding:0;
 ">🗑 Eliminar foto</button>` : ''}
@@ -8197,7 +9222,18 @@ outline:none;box-sizing:border-box;">
                         ${isC16 && contact.horario && contact.horario !== '—' ? `<div class="box-row"><span class="box-key">Reunión:</span> ${escHtml(contact.horario)}</div>` : ''}
                     </div>
                 </div>
-                <div class="info-box" style="margin-top:12px;"><div class="box-label">Salidas Registradas (${outs.length})</div>${outs.map(o=>`<div class="assignment-row"><div><b>Destino:</b> ${escHtml(o.destino)}<br><small><span style="color:var(--accent);cursor:pointer;font-weight:600;text-decoration:none;" onclick="event.stopPropagation();openContactModalFromSpeaker('${escJs(o.destino)}','${escJs(s.nombre)}','${escJs(s.congregacion)}')" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">#${o.temaNum}</span> ${escHtml(themesMap[o.temaNum]||'')}</small></div><div><span class="badge badge-warn">${escHtml(o.fecha)}</span></div></div>`).join('') || '<p style="font-style:italic;font-size:12px;">Ninguna salida asignada.</p>'}</div>
+                <div class="info-box" style="margin-top:12px;"><div class="box-label">Salidas Registradas (${outs.length})</div>${outs.map(o=>{
+                    const isAbs = isAbsent(o);
+                    const absInfo = isAbs ? getAbsenceInfo(o) : null;
+                    const hasSust = isAbs && absInfo && absInfo.sustituto;
+                    const absStyle = isAbs ? (hasSust ? 'border-left:3px solid #16a34a;background:#f0fdf4;padding:8px 10px;border-radius:6px;margin-bottom:6px;overflow:hidden;' : 'border-left:3px solid #dc2626;background:#fef2f2;padding:8px 10px;border-radius:6px;margin-bottom:6px;overflow:hidden;') : '';
+                    const sustTemaLabel = (hasSust && absInfo.temaSust) ? ' · #' + absInfo.temaSust + ' ' + (themesMap[absInfo.temaSust] || '') : '';
+                    const absBadge = isAbs ? (hasSust ? '<div style="margin-top:4px;display:flex;flex-wrap:wrap;align-items:center;gap:4px;"><span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:6px;font-weight:700;">🟢 Sust. ' + escHtml(absInfo.sustituto.split('|')[0]) + '</span>' + (absInfo.temaSust ? '<span style="font-size:10px;padding:2px 6px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;border-radius:6px;font-weight:600;">#' + escHtml(absInfo.temaSust) + ' ' + escHtml(themesMap[absInfo.temaSust] || '') + '</span>' : '') + '</div>' : '<div style="margin-top:4px;"><span class="absence-badge">🔴 Ausente</span></div>') : '';
+                    const absBtnLabel = isAbs ? (hasSust ? '🟢 Sustituido' : '🔴 Ausente') : '⭕ Ausencia';
+                    const absBtnCls = isAbs ? 'btn-absence active' : 'btn-absence';
+                    const absBtnHtml = `<button class="${absBtnCls}" onclick="event.stopPropagation();showAbsenceModal(JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(o))}')))" title="${isAbs ? 'Quitar ausencia' : 'Marcar ausencia'}" style="flex-shrink:0;">${absBtnLabel}</button>`;
+                    return `<div class="assignment-row" style="${absStyle}"><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;"><b>Destino:</b> ${escHtml(o.destino)}<span class="badge badge-warn" style="flex-shrink:0;">${escHtml(o.fecha)}</span></div>${absBadge}<div style="margin-top:4px;"><span style="color:var(--accent);cursor:pointer;font-weight:600;text-decoration:none;font-size:13px;" onclick="event.stopPropagation();openContactModalFromSpeaker('${escJs(o.destino)}','${escJs(s.nombre)}','${escJs(s.congregacion)}')" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">#${o.temaNum}</span> <small style="color:var(--text-2);">${escHtml(themesMap[o.temaNum]||'')}</small></div></div>${absBtnHtml}</div>`;
+                }).join('') || '<p style="font-style:italic;font-size:12px;">Ninguna salida asignada.</p>'}</div>
                 ${isC16 ? `<div class="info-box" style="margin-top:12px;border-left:3px solid var(--accent);"><div class="box-label" style="color:var(--accent);">📊 Visitas al Circuito (${ins.length}) — Acceso Exclusivo</div>${ins.map(o=>`<div class="assignment-row"><div><b>Origen:</b> ${escHtml(o.origen)}<br><small>#${o.temaNum} ${escHtml(themesMap[o.temaNum]||'')}</small></div><div><span class="badge badge-warn">${escHtml(o.fecha)}</span></div></div>`).join('') || '<p style="font-style:italic;font-size:12px;">Sin visitas registradas.</p>'}</div>` : ''}
                 ${s.notas && s.notas !== '—' ? `<div class="info-box" style="margin-top:12px;"><div class="box-label">Notas</div><p style="font-size:13px;color:var(--text-2);">${escHtml(s.notas)}</p></div>` : ''}
                 <div class="info-box" style="margin-top:12px;"><div class="box-label">Temas que posee (${s.temas.length})</div><div style="display:flex;flex-direction:column;gap:4px;max-height:${isC16 ? '240px' : '120px'};overflow-y:auto;">${s.temas.map(t => {
@@ -8640,14 +9676,29 @@ transition:background 0.15s;" onmouseover="this.style.background='#e5e7eb'" onmo
 
             const tableRows = mesesConHist.map(m => {
                 const items = porMes[m];
-                const monthHeader = `<tr><td colspan="5" style="background:#f0f4ff;padding:8px 12px;font-weight:700;color:#2563eb;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">${escHtml(m)} (${items.length})</td></tr>`;
-                const rows = items.map((a, i) => `<tr style="border-bottom:1px solid #e5e7eb;">
-                    <td style="padding:8px 12px;font-size:12px;color:#374151;">${escHtml(a.nombre)}</td>
-                    <td style="padding:8px 12px;font-size:12px;color:#6b7280;">${escHtml(a.origen)}</td>
-                    <td style="padding:8px 12px;font-weight:700;color:#111827;">#${escHtml(a.temaNum)}<div style="font-size:10px;color:#6b7280;font-weight:400;">${escHtml(themesMap[a.temaNum] || '')}</div></td>
-                    <td style="padding:8px 12px;font-size:12px;color:#374151;">${escHtml(a.fecha)}</td>
-                    <td style="padding:8px 12px;font-size:12px;color:#6b7280;">${escHtml(a.hora)}</td>
-                </tr>`).join('');
+                const monthHeader = `<tr><td colspan="6" style="background:#f0f4ff;padding:8px 12px;font-weight:700;color:#2563eb;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">${escHtml(m)} (${items.length})</td></tr>`;
+                const rows = items.map((a, i) => {
+                    const abs = isAbsent(a);
+                    const absInfo = abs ? getAbsenceInfo(a) : null;
+                    const hasSust = abs && absInfo && absInfo.sustituto;
+                    let absCell = '';
+                    if (hasSust) {
+                        absCell = '<td style="padding:8px 12px;font-size:11px;background:#f0fdf4;"><span style="color:#16a34a;font-weight:700;">🟢 Sustituido</span><div style="font-size:10px;color:#16a34a;margin-top:2px;">' + escHtml(absInfo.sustituto.split('|')[0]) + (absInfo.temaSust ? '<br>#' + escHtml(absInfo.temaSust) + ' ' + escHtml(themesMap[absInfo.temaSust] || '') : '') + '</div></td>';
+                    } else if (abs) {
+                        absCell = '<td style="padding:8px 12px;font-size:11px;background:#fef2f2;"><span style="color:#dc2626;font-weight:700;">🔴 Ausente</span>' + (absInfo && absInfo.motivo ? '<div style="font-size:10px;color:#dc2626;margin-top:2px;">' + escHtml(absInfo.motivo) + '</div>' : '') + '</td>';
+                    } else {
+                        absCell = '<td style="padding:8px 12px;font-size:11px;color:#9ca3af;">—</td>';
+                    }
+                    const rowBg = hasSust ? 'background:#f0fdf4;' : (abs ? 'background:#fef2f2;' : '');
+                    return `<tr style="border-bottom:1px solid #e5e7eb;${rowBg}">
+                        <td style="padding:8px 12px;font-size:12px;color:#374151;">${escHtml(a.nombre)}</td>
+                        <td style="padding:8px 12px;font-size:12px;color:#6b7280;">${escHtml(a.origen)}</td>
+                        <td style="padding:8px 12px;font-weight:700;color:#111827;">#${escHtml(a.temaNum)}<div style="font-size:10px;color:#6b7280;font-weight:400;">${escHtml(themesMap[a.temaNum] || '')}</div></td>
+                        <td style="padding:8px 12px;font-size:12px;color:#374151;">${escHtml(a.fecha)}</td>
+                        <td style="padding:8px 12px;font-size:12px;color:#6b7280;">${escHtml(a.hora)}</td>
+                        ${absCell}
+                    </tr>`;
+                }).join('');
                 return monthHeader + rows;
             }).join('');
 
@@ -8686,7 +9737,7 @@ transition:background 0.15s;" onmouseover="this.style.background='#e5e7eb'" onmo
         <div class="summary-item"><div class="summary-val">${mesesConHist.length}</div><div class="summary-lbl">Meses con Actividad</div></div>
     </div>
     <table>
-        <thead><tr><th>Orador</th><th>Origen</th><th>Bosquejo</th><th>Fecha</th><th>Hora</th></tr></thead>
+        <thead><tr><th>Orador</th><th>Origen</th><th>Bosquejo</th><th>Fecha</th><th>Hora</th><th>Ausencia</th></tr></thead>
         <tbody>${tableRows}</tbody>
     </table>
     <div class="footer">DiscursApp · Circuito 16 · ${new Date().getFullYear()}</div>
@@ -9678,13 +10729,6 @@ transition:background 0.15s;" onmouseover="this.style.background='#e5e7eb'" onmo
     </script>
 
     <script>
-        // Service worker solo en GitHub Pages (no afecta a otros entornos)
-        if ('serviceWorker' in navigator && /\.github\.io$/i.test(location.hostname)) {
-            window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
-        }
-    </script>
-
-    <script>
         // Pantalla de inicio: independiente de la lógica de la app (solo oculta el overlay)
         (function () {
             var el = document.getElementById('app-splash'); if (!el) return;
@@ -9699,23 +10743,6 @@ transition:background 0.15s;" onmouseover="this.style.background='#e5e7eb'" onmo
             if (document.readyState === 'complete') later(); else window.addEventListener('load', later);
             setTimeout(close, 5000);
             el.addEventListener('click', close);
-        })();
-    </script>
-
-    <script>
-        // Móvil: copia del selector de Congregación Matriz dentro del menú ⚙️ (sincronizado con el del panel lateral)
-        (function () {
-            var main = document.getElementById('matriz-cong-selector');
-            var mob = document.getElementById('matriz-cong-selector-mob');
-            if (!main || !mob) return;
-            function espejo() { mob.innerHTML = main.innerHTML; mob.value = main.value; }
-            new MutationObserver(espejo).observe(main, { childList: true });
-            mob.addEventListener('change', function () {
-                main.value = mob.value;
-                main.dispatchEvent(new Event('change', { bubbles: true }));
-            });
-            main.addEventListener('change', function () { mob.value = main.value; });
-            espejo();
         })();
     </script>
 </body>
