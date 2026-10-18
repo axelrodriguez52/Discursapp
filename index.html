@@ -9101,7 +9101,7 @@ outline:none;box-sizing:border-box;">
         let _recLista = [], _recSel = null;
         function _recAsignaciones() {
             const nM = normalizeStr(matrizCong);
-            return allAssignments.filter(a => !nM || normalizeStr(a.origen) === nM)
+            return allAssignments.filter(a => !nM || normalizeStr(a.destino) === nM)
                 .sort((a, b) => parseStringToDate(a.fecha) - parseStringToDate(b.fecha));
         }
         function abrirRecordatorio() {
@@ -9125,7 +9125,7 @@ outline:none;box-sizing:border-box;">
             box.innerHTML = _recLista.length ? _recLista.map((a, i) => `
                 <div onclick="recSeleccionar(${i})" style="padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px;${_recSel === a ? 'background:var(--accent-glow);' : ''}">
                     <b>${escHtml(a.nombre)}</b> · <span class="badge badge-warn">${escHtml(a.fecha)}</span>
-                    <div style="font-size:11px;color:var(--text-2);">📍 ${escHtml(a.destino)} · #${escHtml(a.temaNum)} ${escHtml(themesMap[a.temaNum] || '')}</div>
+                    <div style="font-size:11px;color:var(--text-2);">🏠 ${escHtml(a.origen)} · #${escHtml(a.temaNum)} ${escHtml(themesMap[a.temaNum] || '')}</div>
                 </div>`).join('') : '<div style="padding:16px;text-align:center;font-size:12px;color:var(--text-3);">Sin asignaciones que coincidan.</div>';
         }
         function recApellido(n) {
@@ -9135,7 +9135,7 @@ outline:none;box-sizing:border-box;">
             return p[p.length - 1];
         }
         function recConstruir(a) {
-            const cong = matrizCong || a.origen;
+            const cong = matrizCong || a.destino;
             let enc = contactsMap[normalizeStr(cong)]?.encargado || '';
             if (/^(no definido|no registrado|—)$/i.test(enc.trim())) enc = '';
             const tema = themesMap[a.temaNum] ? `${themesMap[a.temaNum]} (N.º ${a.temaNum})` : `Bosquejo N.º ${a.temaNum}`;
