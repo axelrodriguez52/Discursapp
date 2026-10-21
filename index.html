@@ -8,7 +8,7 @@
     <link rel="icon" type="image/x-icon" href="discursapp.ico">
     <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0071e3">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2525,6 +2525,21 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                 transition-duration: .01s !important; }
         }
     </style>
+
+    <!-- ═══ Plantilla predeterminada del recordatorio (estilos propios del componente) ═══ -->
+    <style id="rec-plantilla-estilos">
+        .rec-var-chip {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+            font-size: 11px; font-weight: 700; color: var(--accent);
+            background: var(--accent-dim); border: 1px solid var(--border);
+            border-radius: 8px; padding: 4px 8px; cursor: pointer;
+            transition: background .15s var(--ease), color .15s var(--ease), transform .15s var(--ease);
+        }
+        .rec-var-chip:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+        .rec-var-chip:active { transform: translateY(0); }
+        html.dark-mode .rec-var-chip { border-color: var(--border-hi); }
+        #modal-plantilla-recordatorio .modal-box { max-height:92vh; overflow-y:auto; }
+    </style>
 </head>
 <body>
     <!-- Pantalla de inicio -->
@@ -3209,9 +3224,40 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                 <div id="rec-lista" style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;"></div>
                 <textarea id="rec-mensaje" class="form-textarea" rows="14" placeholder="Selecciona una asignación para generar el mensaje…" style="width:100%;font-size:13px;line-height:1.5;"></textarea>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:flex-end;">
+                    <button class="btn-print" onclick="abrirPlantillaRecordatorio()" title="Editar la plantilla predeterminada del recordatorio">⚙️ Plantilla</button>
                     <button class="btn-print" onclick="recRestablecer()" style="background:var(--text-3);">↺ Restablecer</button>
                     <button class="btn-print" onclick="recCopiar()">📋 Copiar</button>
                     <button class="btn-print" onclick="recWhatsApp()" style="background:var(--success);">💬 WhatsApp</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL EDITAR PLANTILLA PREDETERMINADA DEL RECORDATORIO -->
+        <div class="modal-overlay" id="modal-plantilla-recordatorio" onclick="if(event.target===this)cerrarPlantillaRecordatorio()">
+            <div class="modal-box" style="max-width:680px;">
+                <div class="modal-close" onclick="cerrarPlantillaRecordatorio()">&#x2715;</div>
+                <div class="modal-name" style="margin-bottom:4px;">⚙️ Plantilla del recordatorio</div>
+                <p style="font-size:12px;color:var(--text-3);margin-bottom:12px;">
+                    Edita el mensaje base que se genera para cada discursante. Se guarda en este equipo y se aplica a todos los recordatorios nuevos.
+                </p>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;">
+                    <span style="font-size:10.5px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin-right:2px;">Variables:</span>
+                    <button type="button" class="rec-var-chip" onclick="recInsertarVariable('{hermano}')" title="Apellido del discursante">{hermano}</button>
+                    <button type="button" class="rec-var-chip" onclick="recInsertarVariable('{nombre}')" title="Nombre completo del discursante">{nombre}</button>
+                    <button type="button" class="rec-var-chip" onclick="recInsertarVariable('{tema}')" title="Tema con su número de bosquejo">{tema}</button>
+                    <button type="button" class="rec-var-chip" onclick="recInsertarVariable('{fecha}')" title="Fecha de la asignación">{fecha}</button>
+                    <button type="button" class="rec-var-chip" onclick="recInsertarVariable('{hora}')" title="Hora de la asignación">{hora}</button>
+                    <button type="button" class="rec-var-chip" onclick="recInsertarVariable('{congregacion}')" title="Congregación de destino">{congregacion}</button>
+                    <button type="button" class="rec-var-chip" onclick="recInsertarVariable('{origen}')" title="Congregación de origen">{origen}</button>
+                    <button type="button" class="rec-var-chip" onclick="recInsertarVariable('{encargado}')" title="Encargado de la congregación (firma)">{encargado}</button>
+                </div>
+                <textarea id="rec-plantilla" class="form-textarea" rows="16" spellcheck="false" style="width:100%;font-size:13px;line-height:1.5;"></textarea>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:space-between;align-items:center;">
+                    <button class="btn-print" onclick="recRestaurarPlantilla()" style="background:var(--text-3);">↺ Restaurar predeterminada</button>
+                    <div style="display:flex;gap:8px;">
+                        <button class="btn-print" onclick="cerrarPlantillaRecordatorio()">Cancelar</button>
+                        <button class="btn-print" onclick="recGuardarPlantilla()">💾 Guardar plantilla</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3442,6 +3488,9 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
             }
         }
 
+        // Plantilla del recordatorio respaldada en IndexedDB (declarada antes de su primer uso)
+        let recPlantillaDesdeIDB = '';
+
         const dbRequest = indexedDB.open("Circuito16Storage", 3);
         dbRequest.onupgradeneeded = e => {
             const db2 = e.target.result;
@@ -3451,6 +3500,13 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         dbRequest.onerror = e => { console.error('Error abriendo IndexedDB:', e.target.error); };
         dbRequest.onsuccess = e => {
             db = e.target.result;
+            // Restaurar la plantilla del recordatorio desde IndexedDB (respaldo si localStorage está vacío)
+            try {
+                const txT = db.transaction(["files"], "readonly");
+                const reqT = txT.objectStore("files").get("recordatorioPlantilla");
+                reqT.onsuccess = ev => { if (ev.target.result) recPlantillaDesdeIDB = ev.target.result; };
+                reqT.onerror = () => {};
+            } catch(e) {}
             // Cargar bosquejos bloqueados — primero localStorage como respaldo rápido
             try {
                 const lsBk = localStorage.getItem('discursapp_blockedThemes');
@@ -9107,6 +9163,47 @@ outline:none;box-sizing:border-box;">
 
         // ── RECORDATORIO DE DISCURSO (mensaje estándar editable) ──
         let _recLista = [], _recSel = null;
+
+        // ── PLANTILLA PREDETERMINADA DEL RECORDATORIO ──
+        // La plantilla usa variables {hermano} {nombre} {tema} {fecha} {hora}
+        // {congregacion} {origen} {encargado}. Sin plantilla guardada se usa esta,
+        // que reproduce exactamente el mensaje original.
+        const REC_PLANTILLA_DEFAULT = `Estimado hermano {hermano}
+
+Esto es para recordarte que vas a presentar el siguiente discurso:
+
+Tema: {tema}
+
+Fecha: {fecha}
+Hora: {hora}
+
+Congregación: {congregacion}
+
+Enviar imágenes y canción unos días antes de la fecha del discurso.
+
+Gracias por tu ayuda.
+
+Con amor cristiano,
+{encargado}`;
+        const REC_PLANTILLA_KEY = 'discursapp_recordatorio_plantilla';
+
+        function cargarPlantillaRecordatorio() {
+            let t = '';
+            try { t = localStorage.getItem(REC_PLANTILLA_KEY) || ''; } catch(e) {}
+            if (!t) t = recPlantillaDesdeIDB || '';
+            if (!t) t = REC_PLANTILLA_DEFAULT;
+            return t;
+        }
+
+        function guardarPlantillaRecordatorio(txt) {
+            recPlantillaDesdeIDB = txt;
+            try { localStorage.setItem(REC_PLANTILLA_KEY, txt); }
+            catch(e) { console.warn('Error guardando la plantilla del recordatorio en localStorage:', e); }
+            if (db) {
+                try { db.transaction(["files"], "readwrite").objectStore("files").put(txt, "recordatorioPlantilla"); }
+                catch(e) { console.warn('Error guardando la plantilla del recordatorio en IndexedDB:', e); }
+            }
+        }
         function _recAsignaciones() {
             const nM = normalizeStr(matrizCong);
             return allAssignments.filter(a => !nM || normalizeStr(a.destino) === nM)
@@ -9143,20 +9240,28 @@ outline:none;box-sizing:border-box;">
             return p[p.length - 1];
         }
         function recConstruir(a) {
+            return recAplicarPlantilla(cargarPlantillaRecordatorio(), a);
+        }
+        // Sustituye las variables {…} de la plantilla por los datos de la asignación.
+        // Las variables desconocidas se dejan literales para que el usuario detecte el error.
+        function recAplicarPlantilla(tpl, a) {
             const cong = matrizCong || a.destino;
             let enc = contactsMap[normalizeStr(cong)]?.encargado || '';
             if (/^(no definido|no registrado|—)$/i.test(enc.trim())) enc = '';
             const tema = themesMap[a.temaNum] ? `${themesMap[a.temaNum]} (N.º ${a.temaNum})` : `Bosquejo N.º ${a.temaNum}`;
             const hora = a.hora && a.hora !== '—' ? a.hora : '';
-            return `Estimado hermano ${recApellido(a.nombre)}\n\n` +
-                `Esto es para recordarte que vas a presentar el siguiente discurso:\n\n` +
-                `Tema: ${tema}\n\n` +
-                `Fecha: ${a.fecha}\n` +
-                `Hora: ${hora}\n\n` +
-                `Congregación: ${cong}\n\n` +
-                `Enviar imágenes y canción unos días antes de la fecha del discurso.\n\n` +
-                `Gracias por tu ayuda.\n\n` +
-                `Con amor cristiano,\n${enc}`;
+            const vals = {
+                hermano:   recApellido(a.nombre),
+                nombre:    a.nombre || '',
+                tema:      tema,
+                fecha:     a.fecha || '',
+                hora:      hora,
+                congregacion: cong || '',
+                origen:    a.origen || '',
+                encargado: enc
+            };
+            return String(tpl == null ? '' : tpl)
+                .replace(/\{(hermano|nombre|tema|fecha|hora|congregacion|origen|encargado)\}/g, (m, k) => vals[k]);
         }
         function recSeleccionar(i) {
             _recSel = _recLista[i] || null;
@@ -9165,6 +9270,41 @@ outline:none;box-sizing:border-box;">
         }
         function recRestablecer() {
             if (_recSel) document.getElementById('rec-mensaje').value = recConstruir(_recSel);
+        }
+        // ── UI de edición de la plantilla predeterminada ──
+        function abrirPlantillaRecordatorio() {
+            const ta = document.getElementById('rec-plantilla');
+            ta.value = cargarPlantillaRecordatorio();
+            document.getElementById('modal-plantilla-recordatorio').classList.add('active');
+            try { ta.focus(); } catch(e) {}
+        }
+        function cerrarPlantillaRecordatorio() {
+            document.getElementById('modal-plantilla-recordatorio').classList.remove('active');
+        }
+        function recInsertarVariable(v) {
+            const ta = document.getElementById('rec-plantilla');
+            if (!ta) return;
+            const start = ta.selectionStart == null ? ta.value.length : ta.selectionStart;
+            const end   = ta.selectionEnd   == null ? ta.value.length : ta.selectionEnd;
+            ta.value = ta.value.slice(0, start) + v + ta.value.slice(end);
+            try { ta.focus(); ta.setSelectionRange(start + v.length, start + v.length); } catch(e) {}
+        }
+        function recRestaurarPlantilla() {
+            const ta = document.getElementById('rec-plantilla');
+            if (!ta) return;
+            ta.value = REC_PLANTILLA_DEFAULT;
+            mostrarToast('Plantilla restaurada a la predeterminada. Pulsa «Guardar plantilla» para aplicarla.', 'success');
+        }
+        function recGuardarPlantilla() {
+            const ta = document.getElementById('rec-plantilla');
+            if (!ta) return;
+            const t = ta.value;
+            if (!t.trim()) { mostrarToast('⚠️ La plantilla no puede estar vacía.', 'error'); return; }
+            guardarPlantillaRecordatorio(t);
+            // Refrescar el mensaje del modal principal si ya hay una asignación seleccionada
+            if (_recSel) document.getElementById('rec-mensaje').value = recConstruir(_recSel);
+            cerrarPlantillaRecordatorio();
+            mostrarToast('✓ Plantilla del recordatorio guardada.', 'success');
         }
         async function recCopiar() {
             const t = document.getElementById('rec-mensaje').value;
