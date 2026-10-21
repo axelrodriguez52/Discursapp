@@ -1,0 +1,320 @@
+/* ==========================================================================
+   Tokens, reset, tipografia, botones, formularios y ajustes de modo oscuro
+   Origen: DISCURSAPP .html L27-341
+   ========================================================================== */
+
+        :root {
+            --bg-app:      #f2f2f7;
+            --bg-sidebar:  rgba(255,255,255,0.72);
+            --bg-card:     rgba(255,255,255,0.78);
+            --bg-card-alt: rgba(255,255,255,0.55);
+            --bg-glass:    rgba(255,255,255,0.65);
+            --bg-glass-heavy: rgba(255,255,255,0.82);
+            --border:      rgba(0,0,0,0.06);
+            --border-hi:   rgba(0,0,0,0.1);
+            --border-glass: rgba(255,255,255,0.5);
+            --text-1:      #1d1d1f;
+            --text-2:      #6e6e73;
+            --text-3:      #aeaeb2;
+            --accent:      #0071e3;
+            --accent-hover:#0077ed;
+            --accent-dim:  rgba(0,113,227,0.08);
+            --accent-glow: rgba(0, 113, 227, 0.12);
+            --accent-grad: linear-gradient(135deg, #147ce5, #0071e3);
+            --accent-grad-hover: linear-gradient(135deg, #0071e3, #0077ed);
+            --success:     #34c759;
+            --success-dim: rgba(52,199,89,0.08);
+            --warn:        #ff9f0a;
+            --warn-dim:    rgba(255,159,10,0.08);
+            --danger:      #ff3b30;
+            --danger-dim:  rgba(255,59,48,0.08);
+            --modal-bg:    rgba(0, 0, 0, 0.25);
+            --radius-sm:   12px;
+            --radius-md:   16px;
+            --radius-lg:   22px;
+            --shadow-sm:   0 1px 3px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(0,0,0,0.03);
+            --shadow-md:   0 4px 16px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+            --shadow-lg:   0 12px 40px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(0,0,0,0.04);
+            --shadow-glow: 0 8px 28px -6px rgba(0, 113, 227, 0.3);
+            --glass-blur:  saturate(180%) blur(20px);
+            --glass-blur-heavy: saturate(200%) blur(40px);
+            --glass-highlight: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            --ease:        cubic-bezier(0.25, 0.1, 0.25, 1);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --font-app:    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        html.dark-mode {
+            --bg-app:      #0d0d0f;
+            --bg-sidebar:  rgba(28,28,30,0.82);
+            --bg-card:     rgba(28,28,30,0.85);
+            --bg-card-alt: rgba(44,44,46,0.6);
+            --bg-glass:    rgba(28,28,30,0.72);
+            --bg-glass-heavy: rgba(28,28,30,0.9);
+            --border:      rgba(255,255,255,0.08);
+            --border-hi:   rgba(255,255,255,0.14);
+            --border-glass: rgba(255,255,255,0.1);
+            --text-1:      #f5f5f7;
+            --text-2:      #a1a1a6;
+            --text-3:      #636366;
+            --accent:      #0a84ff;
+            --accent-hover:#409cff;
+            --accent-dim:  rgba(10,132,255,0.12);
+            --accent-glow: rgba(10,132,255,0.18);
+            --accent-grad: linear-gradient(135deg, #0a84ff, #0071e3);
+            --accent-grad-hover: linear-gradient(135deg, #0071e3, #0a84ff);
+            --success:     #30d158;
+            --success-dim: rgba(48,209,88,0.12);
+            --warn:        #ffd60a;
+            --warn-dim:    rgba(255,214,10,0.12);
+            --danger:      #ff453a;
+            --danger-dim:  rgba(255,69,58,0.12);
+            --modal-bg:    rgba(0,0,0,0.55);
+            --shadow-sm:   0 1px 3px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(255,255,255,0.04);
+            --shadow-md:   0 4px 16px rgba(0,0,0,0.4), 0 0 0 0.5px rgba(255,255,255,0.04);
+            --shadow-lg:   0 12px 40px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.04);
+            --shadow-glow: 0 8px 28px -6px rgba(10,132,255,0.35);
+            --glass-blur:  saturate(160%) blur(20px);
+            --glass-highlight: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0) 100%);
+        }
+        html.dark-mode body { background: var(--bg-app); color: var(--text-1); }
+        html.dark-mode .cal-day.other-month { background: rgba(28,28,30,0.5); }
+        html.dark-mode .cal-day.today { background: rgba(10,132,255,0.15); }
+        html.dark-mode .cal-day:hover { background: rgba(10,132,255,0.08) !important; }
+        html.dark-mode .cal-day.blocked-day { background: rgba(255,69,58,0.08); }
+        html.dark-mode .cal-day.has-evento-especial { background: rgba(191,90,242,0.08); }
+        html.dark-mode .cal-event-chip.asignacion { background: rgba(10,132,255,0.15); color: #64b5f6; }
+        html.dark-mode .cal-event-chip.superintendente { background: rgba(191,90,242,0.15); color: #b388ff; }
+        html.dark-mode .cal-event-chip.asamblea { background: rgba(255,214,10,0.12); color: #ffd60a; }
+        html.dark-mode .cal-event-chip.especial { background: rgba(48,209,88,0.12); color: #69db7c; }
+        html.dark-mode .cal-event-chip.otro { background: rgba(255,255,255,0.06); color: var(--text-2); border: 1px solid var(--border); }
+        html.dark-mode .cal-more-chip { background: rgba(10,132,255,0.12); }
+        html.dark-mode .cal-day-header { background: rgba(28,28,30,0.6); }
+        html.dark-mode .stat-preview-row { border-bottom-color: var(--border); }
+        html.dark-mode .sug-match { background: rgba(10,132,255,0.15); color: var(--accent); }
+        html.dark-mode .month-dot.disponible { background: rgba(48,209,88,0.15); color: var(--success); }
+        html.dark-mode .month-dot.asignado { background: rgba(255,159,10,0.15); color: var(--warn); }
+        html.dark-mode input, html.dark-mode select, html.dark-mode textarea {
+            background: var(--bg-card-alt); color: var(--text-1); border-color: var(--border-hi);
+        }
+        html.dark-mode input::placeholder, html.dark-mode textarea::placeholder { color: var(--text-3); }
+        html.dark-mode .filter-select { background: var(--bg-card-alt); color: var(--text-1); border-color: var(--border-hi); }
+        html.dark-mode .btn-print { background: var(--bg-card-alt); color: var(--text-2); border-color: var(--border-hi); }
+        html.dark-mode .btn-print:hover { border-color: var(--accent); color: var(--accent); }
+        html.dark-mode .empty-state { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .sync-dot { box-shadow: 0 0 6px rgba(0,0,0,0.4); }
+        html.dark-mode .table-wrap table { background: var(--bg-card); }
+        html.dark-mode .table-wrap th { background: rgba(28,28,30,0.6); color: var(--text-2); border-bottom-color: var(--border-hi); }
+        html.dark-mode .table-wrap td { border-bottom-color: var(--border); color: var(--text-1); }
+        html.dark-mode .reg-step { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .reg-step.active { background: var(--accent-dim); border-color: var(--accent); }
+        html.dark-mode .reg-step.completed { background: rgba(48,209,88,0.08); border-color: var(--success); }
+        html.dark-mode .toast { color: var(--text-1); }
+        html.dark-mode .speaker-card { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .cal-conflict-row { border-bottom-color: var(--border); }
+        html.dark-mode .modal-box { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .nav-menu-btn { background: var(--bg-card-alt); color: var(--text-1); }
+        html.dark-mode .nav-menu-btn:hover { background: var(--accent-dim); color: var(--accent); }
+        html.dark-mode .nav-dropdown { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .tab-btn { color: var(--text-2); }
+        html.dark-mode .tab-btn:hover { background: var(--accent-dim); color: var(--accent); }
+        html.dark-mode .tab-btn.active { background: var(--accent-dim); color: var(--accent); }
+        html.dark-mode .editor-toolbar { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .editor-search input { background: var(--bg-card-alt); border-color: var(--border-hi); }
+        html.dark-mode .table-wrap { background: var(--bg-card); }
+        html.dark-mode thead th { background: rgba(28,28,30,0.6); color: var(--text-2); }
+        html.dark-mode tbody tr:hover { background: rgba(255,255,255,0.03); }
+        html.dark-mode .theme-row { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .assignment-row { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .cong-header-box { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .contact-card { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .rol-summary-bar { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .gf-nav { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .gf-nav:hover { background: var(--accent-dim); color: var(--accent); }
+        html.dark-mode .theme-row.blocked-row { background: rgba(255,69,58,0.06) !important; border-color: rgba(255,69,58,0.15) !important; }
+        html.dark-mode .cong-tab-btn { background: var(--bg-card-alt); color: var(--text-2); border-color: var(--border); }
+        html.dark-mode .cong-tab-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+        html.dark-mode .reg-step { background: var(--bg-card-alt); border-color: var(--border); color: var(--text-2); }
+        html.dark-mode .reg-step.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+        html.dark-mode .reg-step.completed { background: rgba(48,209,88,0.06); border-color: var(--success); color: var(--success); }
+        html.dark-mode .card-name { color: var(--text-1) !important; }
+        html.dark-mode .card-cong { color: var(--text-2) !important; }
+        html.dark-mode .cal-month-grid { background: var(--bg-card); border-color: var(--border); box-shadow: var(--shadow-md); }
+        html.dark-mode .cal-week-grid { background: var(--bg-card); border-color: var(--border); box-shadow: var(--shadow-md); }
+        html.dark-mode .cal-week-header { background: rgba(28,28,30,0.6); border-color: var(--border); }
+        html.dark-mode .cal-week-cell { border-color: var(--border); }
+        html.dark-mode .cal-week-cell:hover { background: rgba(10,132,255,0.08) !important; }
+        html.dark-mode .mobile-drawer { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .sidebar-backdrop { background: rgba(0,0,0,0.5); }
+        html.dark-mode .mobile-actions-toggle { background: var(--bg-card-alt); color: var(--text-2); border-color: var(--border); }
+        html.dark-mode .nav-status { background: var(--bg-card-alt); color: var(--text-2); border-color: var(--border); }
+        html.dark-mode .badge { background: var(--bg-card-alt); color: var(--text-1); border-color: var(--border); }
+        html.dark-mode .badge-accent { background: var(--accent-dim); color: var(--accent); }
+        html.dark-mode .badge-warn { background: var(--warn-dim); color: var(--warn); }
+        html.dark-mode .badge-success { background: var(--success-dim); color: var(--success); }
+        html.dark-mode .badge-danger { background: var(--danger-dim); color: var(--danger); }
+        html.dark-mode .cal-event-chip.has-foto { border-color: var(--border); }
+        html.dark-mode .cal-chip-avatar { border-color: rgba(0,0,0,0.3); }
+        html.dark-mode .sync-dot.online { background: var(--success); box-shadow: 0 0 6px rgba(48,209,88,0.5); }
+        html.dark-mode .sync-dot.offline { background: var(--danger); box-shadow: 0 0 6px rgba(255,69,58,0.5); }
+        html.dark-mode .speaker-card { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .theme-card.blocked { background: rgba(255,69,58,0.06); }
+        html.dark-mode .mini-theme-badge { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .modal-overlay { background: rgba(0,0,0,0.6); }
+        html.dark-mode .stats-monthly-chart { border-bottom-color: var(--border); }
+        html.dark-mode .stats-cong-bar-row { border-bottom-color: var(--border); }
+        html.dark-mode .stats-cong-bar-track { background: rgba(255,255,255,0.06); }
+        html.dark-mode .stat-card { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .stat-card-body { border-top-color: var(--border); }
+        html.dark-mode .stat-card-divider { background: var(--border); }
+        html.dark-mode .stat-list-row { border-bottom-color: var(--border); }
+        html.dark-mode .stat-list-row:hover { background: rgba(255,255,255,0.03); }
+        html.dark-mode .stat-preview-row { border-bottom-color: var(--border); }
+        html.dark-mode .stat-expanded-overlay { background: rgba(0,0,0,0.7); }
+        html.dark-mode .stat-expanded-box { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .stat-expanded-body { border-top-color: var(--border); }
+        html.dark-mode .blocked-row { background: rgba(255,69,58,0.06) !important; }
+        html.dark-mode .expander-btn { background: var(--bg-card-alt); border-color: var(--border); color: var(--text-2); }
+        html.dark-mode .expander-btn:hover { border-color: var(--accent); color: var(--accent); }
+        html.dark-mode .cal-conflicts-panel { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .cal-conflict-row { border-bottom-color: var(--border); color: var(--text-1); }
+        html.dark-mode .mdd-ev-card { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .mdd-meta-pill { background: var(--bg-card-alt); color: var(--text-2); }
+        html.dark-mode .modal-dia-header { border-bottom-color: var(--border); }
+        html.dark-mode .modal-dia-close { background: var(--bg-card-alt); border-color: var(--border); color: var(--text-2); }
+        html.dark-mode .modal-dia-close:hover { border-color: var(--danger); color: var(--danger); }
+        html.dark-mode .disponibilidad-bar { background: rgba(255,255,255,0.06); }
+        html.dark-mode .disponibilidad-fill { background: var(--accent); }
+        html.dark-mode .preseleccion-item { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .preseleccion-item:hover { border-color: var(--accent); }
+        html.dark-mode .wizard-step { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .wizard-step.active { background: var(--accent-dim); border-color: var(--accent); }
+        html.dark-mode .wizard-step.done { background: rgba(48,209,88,0.06); border-color: var(--success); }
+        html.dark-mode .reg-mes-chips { gap: 6px; }
+        html.dark-mode .month-check-item { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .month-check-item:hover { border-color: var(--accent); background: var(--accent-dim); }
+        html.dark-mode .month-check-item.selected { background: var(--accent-dim); border-color: var(--accent); }
+        html.dark-mode .print-title { display: none; }
+        html.dark-mode .sug-match { background: rgba(10,132,255,0.15); color: var(--accent); }
+        html.dark-mode #rol-summary-bar,
+        html.dark-mode #visitas-summary-bar,
+        html.dark-mode #bosquejos-summary-bar { background: var(--bg-card) !important; border-color: var(--border) !important; color: var(--text-1); }
+        html.dark-mode .stats-summary-item { background: var(--bg-card-alt); border-color: var(--border); }
+        html.dark-mode .stats-summary-item .ss-value { color: var(--text-1); }
+        html.dark-mode .cal-week-cell.blocked-col { background: rgba(255,69,58,0.06) !important; }
+
+        /* ── DARK MODE: Elementos faltantes ── */
+        html.dark-mode .upload-icon { background: var(--bg-card-alt); border-color: var(--border-hi); }
+        html.dark-mode .btn-google { background: var(--bg-card); border-color: var(--border-hi); }
+        html.dark-mode .btn-google:hover:not(:disabled) { background: var(--bg-card-alt); }
+        html.dark-mode .btn-danger { background: var(--bg-card); border-color: var(--border-hi); }
+        html.dark-mode .gf-card.blocked { background: rgba(255,69,58,0.06); border-color: rgba(255,69,58,0.2); }
+        html.dark-mode .gf-badge-pill.purple { background: rgba(191,90,242,0.12); color: #b388ff; }
+        html.dark-mode .gf-nav:hover { background: var(--bg-card-alt); }
+        html.dark-mode .badge-link:hover { background: rgba(10,132,255,0.1); }
+        html.dark-mode .sug-badge-old { background: rgba(255,214,10,0.12); color: #ffd60a; }
+        html.dark-mode .sug-badge-never { background: rgba(191,90,242,0.12); color: #b388ff; }
+        html.dark-mode .sug-badge-ok { background: rgba(48,209,88,0.12); color: #69db7c; }
+        html.dark-mode .bsq-card.blocked { background: rgba(255,69,58,0.06); }
+        html.dark-mode .bsq-card.selected { background: rgba(10,132,255,0.10); }
+        html.dark-mode .btn-block-on:hover { background: rgba(255,69,58,0.15); }
+        html.dark-mode .btn-block-off:hover { background: rgba(48,209,88,0.15); }
+        html.dark-mode .editor-card { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .editor-card .ec-btn { background: var(--bg-card-alt); border-color: var(--border-hi); color: var(--text-2); }
+        html.dark-mode .editor-card .ec-btn:hover { background: var(--accent-dim); }
+        html.dark-mode .editor-card .ec-btn.primary { color: var(--accent); }
+        html.dark-mode .editor-card .ec-btn.danger { color: var(--danger); }
+        html.dark-mode .form-input, html.dark-mode .form-textarea, html.dark-mode .form-select {
+            background: var(--bg-card-alt); border-color: var(--border-hi); color: var(--text-1);
+        }
+        html.dark-mode .form-input:focus, html.dark-mode .form-textarea:focus, html.dark-mode .form-select:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        html.dark-mode .stat-mini-card { background: var(--bg-card); border-color: var(--border); }
+        html.dark-mode .stat-card-count-pill.purple { background: rgba(191,90,242,0.12); color: #b388ff; }
+        html.dark-mode .reg-tema-btn { background: var(--bg-card-alt); border-color: var(--border-hi); color: var(--text-2); }
+        html.dark-mode .reg-tema-btn:hover:not(.blocked) { background: var(--accent-dim); color: var(--accent); }
+        html.dark-mode .cal-nav-btn { background: var(--bg-card-alt); border-color: var(--border-hi); }
+        html.dark-mode .cal-nav-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+        html.dark-mode .cal-view-btn { background: var(--bg-card-alt); color: var(--text-2); }
+        html.dark-mode .cal-view-btn.active { background: var(--accent); color: #fff; }
+        html.dark-mode .cal-event-chip.asignacion:hover { background: rgba(10,132,255,0.25); }
+        html.dark-mode #modal-evento .mev-box { background: var(--bg-card); }
+        html.dark-mode .mev-input, html.dark-mode .mev-select {
+            background: var(--bg-card-alt); border-color: var(--border-hi); color: var(--text-1);
+        }
+        html.dark-mode .mev-input:focus, html.dark-mode .mev-select:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        html.dark-mode .mev-btn-cancel { background: var(--bg-card-alt); color: var(--text-2); border-color: var(--border); }
+        html.dark-mode .mev-btn-cancel:hover { background: var(--border); color: var(--text-1); }
+        html.dark-mode .mev-btn-delete { background: var(--danger-dim); color: var(--danger); border-color: rgba(255,69,58,0.2); }
+        html.dark-mode .mev-btn-delete:hover { background: rgba(255,69,58,0.2); }
+        html.dark-mode .mdd-box { background: var(--bg-card); }
+        html.dark-mode .mdd-meta-pill.purple { background: rgba(191,90,242,0.12); color: #b388ff; }
+        html.dark-mode .mdd-meta-pill.green { background: rgba(48,209,88,0.12); color: #69db7c; }
+        html.dark-mode .mdd-meta-pill.warn { background: rgba(255,214,10,0.12); color: #ffd60a; }
+        html.dark-mode .card-avatar-btn { border-color: rgba(255,255,255,0.15) !important; }
+        html.dark-mode .speaker-card.theme-card { background: var(--bg-card); }
+        html.dark-mode .top-nav { background: rgba(28,28,30,0.82); border-color: var(--border); }
+        html.dark-mode .cal-tooltip { background: #2c2c2e; color: #f5f5f7; }
+        html.dark-mode .mdd-card-avatar-ph { background: linear-gradient(135deg, var(--accent-dim), rgba(10,132,255,0.08)); }
+
+        .dark-toggle {
+            width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+            background: var(--bg-card-alt); cursor: pointer; display: flex; align-items: center;
+            justify-content: center; font-size: 16px; transition: all 0.3s var(--ease);
+            flex-shrink: 0;
+        }
+        .dark-toggle:hover { background: var(--accent-dim); border-color: var(--accent); transform: scale(1.08); }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            0%   { opacity: 0; transform: scale(0.9) translateY(8px); }
+            60%  { opacity: 1; transform: scale(1.02) translateY(-1px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes popInSmall {
+            0%   { opacity: 0; transform: scale(0.95); }
+            70%  { opacity: 1; transform: scale(1.01); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 113, 227,0.0); }
+            50%      { box-shadow: 0 0 0 6px rgba(0, 113, 227,0.08); }
+        }
+        @keyframes centerGlow {
+            0%, 100% { box-shadow: 0 16px 48px -12px rgba(0,113,227,0.18), 0 0 0 1px rgba(0,113,227,0.12); }
+            50%      { box-shadow: 0 20px 56px -10px rgba(0,113,227,0.22), 0 0 0 1.5px rgba(0,113,227,0.15); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+            background: var(--bg-app);
+            color: var(--text-1);
+            font-family: var(--font-app);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.12); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.2); }

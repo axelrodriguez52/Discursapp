@@ -1,0 +1,11 @@
+/* ==========================================================================
+   RecordatorioModal
+   Origen: DISCURSAPP .html (L3298-3316)
+   ========================================================================== */
+export default function RecordatorioModal() {
+  return (
+    <>
+      <div className="modal-overlay" id="modal-recordatorio" onClick={(event) => { if(event.target===event.currentTarget)cerrarRecordatorio() }}>{" "}<div className="modal-box" style={{ maxWidth: "640px" }}>{" "}<div className="modal-close" onClick={(event) => { cerrarRecordatorio() }}>{"✕"}</div>{" "}<div className="modal-name" style={{ marginBottom: "4px" }}>{"✉️ Recordatorio de discurso"}</div>{" "}<p style={{ fontSize: "12px", color: "var(--text-3)", marginBottom: "14px" }}>{"Busca por nombre y/o fecha, elige la asignación y edita el mensaje si lo necesitas."}</p>{" "}<div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "10px" }}>{" "}<input type="text" id="rec-nombre" className="form-input" placeholder="Buscar discursante…" onInput={(event) => { recRender() }} style={{ flex: "1", minWidth: "160px" }} />{" "}<select id="rec-fecha" className="form-select" onChange={(event) => { recRender() }} style={{ flex: "1", minWidth: "160px" }}></select>{" "}</div>{" "}<div id="rec-lista" style={{ maxHeight: "200px", overflowY: "auto", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", marginBottom: "12px" }}></div>{" "}<textarea id="rec-mensaje" className="form-textarea" rows="14" placeholder="Selecciona una asignación para generar el mensaje…" style={{ width: "100%", fontSize: "13px", lineHeight: "1.5" }}></textarea>{" "}<div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "12px", justifyContent: "flex-end" }}>{" "}<button className="btn-print" onClick={(event) => { abrirPlantillaRecordatorio() }} title="Editar la plantilla predeterminada del recordatorio">{"⚙️ Plantilla"}</button>{" "}<button className="btn-print" onClick={(event) => { recRestablecer() }} style={{ background: "var(--text-3)" }}>{"↺ Restablecer"}</button>{" "}<button className="btn-print" onClick={(event) => { recCopiar() }}>{"📋 Copiar"}</button>{" "}<button className="btn-print" onClick={(event) => { recWhatsApp() }} style={{ background: "var(--success)" }}>{"💬 WhatsApp"}</button>{" "}</div>{" "}</div>{" "}</div>
+    </>
+  );
+}

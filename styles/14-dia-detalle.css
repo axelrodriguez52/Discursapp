@@ -1,0 +1,92 @@
+/* ==========================================================================
+   Modal de detalle de dia
+   Origen: DISCURSAPP .html L2212-2298
+   ========================================================================== */
+
+        /* ── MODAL DE DETALLE DE DÍA ── */
+        #modal-dia-detalle {
+            position: fixed; inset: 0; z-index: 450; background: var(--modal-bg);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.25s var(--ease); backdrop-filter: blur(6px);
+        }
+        #modal-dia-detalle.active { opacity: 1; visibility: visible; }
+        .mdd-box {
+            background: #fff; border-radius: var(--radius-lg); padding: 0;
+            width: 94%; max-width: 520px; max-height: 85vh; overflow: hidden;
+            box-shadow: 0 24px 64px -12px rgba(0,0,0,0.3);
+            animation: popIn 0.3s var(--ease-bounce); display: flex; flex-direction: column;
+        }
+        .mdd-header {
+            padding: 20px 24px; background: linear-gradient(135deg, var(--accent), #0077ed);
+            color: #fff; flex-shrink: 0;
+        }
+        .mdd-date-label { font-size: 12px; font-weight: 600; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+        .mdd-date { font-size: 22px; font-weight: 800; margin-top: 2px; letter-spacing: -0.5px; }
+        .mdd-summary { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+        .mdd-close {
+            position: absolute; top: 16px; right: 16px; width: 32px; height: 32px;
+            background: rgba(255,255,255,0.2); border: none; border-radius: 50%;
+            color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; transition: background 0.15s;
+        }
+        .mdd-close:hover { background: rgba(255,255,255,0.35); }
+        .mdd-body { padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .mdd-section-label {
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px;
+            color: var(--text-3); margin-bottom: 6px;
+        }
+        .mdd-card {
+            background: var(--bg-card-alt); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 14px 16px;
+            display: flex; gap: 14px; align-items: flex-start; cursor: pointer;
+            transition: all 0.2s var(--ease); animation: fadeSlideIn 0.3s var(--ease) backwards;
+        }
+        .mdd-card:hover { border-color: var(--accent); background: var(--accent-dim); transform: translateX(2px); }
+        .mdd-card-avatar {
+            width: 46px; height: 46px; border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--border); flex-shrink: 0; background: var(--bg-card-alt);
+        }
+        .mdd-card-avatar-ph {
+            width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--accent-dim), #e8f4fd);
+            border: 2px solid rgba(0, 113, 227,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        .mdd-card-info { flex: 1; min-width: 0; }
+        .mdd-card-name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+        .mdd-card-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+        .mdd-card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .mdd-meta-pill {
+            font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+            background: #dbeafe; color: #1e40af;
+        }
+        .mdd-meta-pill.purple { background: #ede9fe; color: #5b21b6; }
+        .mdd-meta-pill.green  { background: #dcfce7; color: #166534; }
+        .mdd-meta-pill.warn   { background: #fef3c7; color: #8a4c0e; }
+        .mdd-meta-pill.danger { background: var(--danger-dim); color: var(--danger); }
+        .mdd-ev-card {
+            background: var(--bg-card-alt); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 12px 16px;
+            display: flex; gap: 12px; align-items: center; cursor: pointer;
+            transition: all 0.2s; animation: fadeSlideIn 0.3s var(--ease) backwards;
+        }
+        .mdd-ev-card:hover { border-color: var(--accent); transform: translateX(2px); }
+        .mdd-ev-icon { font-size: 22px; flex-shrink: 0; }
+        .mdd-empty {
+            text-align: center; padding: 28px; color: var(--text-3); font-size: 13px;
+        }
+
+        @media (max-width: 580px) {
+            .cal-month-grid { font-size: 10px; }
+            .cal-day { min-height: 65px; max-height: 65px; padding: 4px; }
+            .cal-event-chip { font-size: 9px; padding: 2px 4px; }
+            .cal-toolbar { gap: 8px; padding: 10px 12px; }
+            .cal-month-label { font-size: 14px; min-width: 130px; }
+            .cal-view-toggle { margin-left: 0; width: 100%; }
+            .cal-view-btn { flex: 1; text-align: center; padding: 7px 8px; }
+            .cal-week-grid { grid-template-columns: 40px repeat(7, 1fr); }
+            .mdd-box { width: 97%; max-height: 90vh; }
+            .mdd-header { padding: 16px 18px; }
+            .mdd-body { padding: 14px 16px; }
+        }

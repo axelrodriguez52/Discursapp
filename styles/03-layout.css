@@ -1,0 +1,79 @@
+/* ==========================================================================
+   Area principal, navegacion superior y contenedor de vistas
+   Origen: DISCURSAPP .html L463-537
+   ========================================================================== */
+
+        /* MAIN CONTENT AREA */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+        /* TOP NAVIGATION — menú desplegable */
+        .top-nav {
+            display: flex; background: rgba(255,255,255,0.72); border-bottom: 0.5px solid rgba(0,0,0,0.06);
+            padding: 0 20px; height: 52px; align-items: center; justify-content: space-between;
+            flex-shrink: 0; gap: 12px; position: relative; z-index: 100;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+        .top-nav::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 1px;
+            background: var(--glass-highlight);
+            pointer-events: none;
+        }
+
+        /* Botón que abre el menú */
+        .nav-menu-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+            padding: 7px 12px; cursor: pointer;
+            font-size: 13px; font-weight: 600; color: var(--text-1);
+            transition: all 0.25s var(--ease); white-space: nowrap;
+            min-height: 36px;
+        }
+        .nav-menu-btn:hover { background: var(--bg-card-alt); transform: translateY(-1px); }
+        .nav-menu-btn .nav-menu-arrow { font-size: 10px; color: var(--text-3); transition: transform 0.3s var(--ease-bounce); }
+        .nav-menu-btn.open { background: var(--accent-dim); color: var(--accent); }
+        .nav-menu-btn.open .nav-menu-arrow { transform: rotate(180deg); }
+
+        /* Label de pestaña activa */
+        .nav-active-label {
+            font-size: 13px; font-weight: 600; color: var(--text-1);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            max-width: 260px;
+        }
+
+        /* Panel desplegable */
+        .nav-dropdown {
+            position: absolute; top: 52px; left: 0; right: 0;
+            background: rgba(255,255,255,0.85); border-bottom: 0.5px solid rgba(0,0,0,0.06);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.1); z-index: 99;
+            display: flex; flex-direction: column; padding: 8px;
+            gap: 2px;
+            max-height: 0; opacity: 0; overflow: hidden;
+            transition: max-height 0.35s var(--ease), opacity 0.25s var(--ease), padding 0.3s var(--ease);
+            padding-top: 0; padding-bottom: 0;
+            backdrop-filter: var(--glass-blur-heavy);
+            -webkit-backdrop-filter: var(--glass-blur-heavy);
+        }
+        .nav-dropdown.open { max-height: 400px; opacity: 1; padding: 8px; }
+
+        .tab-btn {
+            background: none; border: none; color: var(--text-2);
+            padding: 10px 14px; font-size: 13px; font-weight: 500;
+            cursor: pointer; border-radius: var(--radius-sm);
+            transition: all 0.2s var(--ease); text-align: left;
+display: flex; align-items: center; gap: 8px; width: 100%;
+        }
+        .tab-btn:hover { color: var(--text-1); background: var(--bg-card-alt); transform: translateX(2px); }
+        .tab-btn.active { color: var(--accent); background: var(--accent-dim); font-weight: 600; }
+
+        .nav-status { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-3); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+
+        /* SECCIONES DE VISTA */
+        .view-section { display: none; flex: 1; padding: 20px 16px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .view-section.active { display: block; animation: fadeSlideUp 0.35s var(--ease); }
+
+        .view-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .view-title h3 { font-size: 22px; font-weight: 700; color: var(--text-1); letter-spacing: -0.02em; }
+        .view-title p { font-size: 13px; color: var(--text-2); margin-top: 4px; font-weight: 400; }

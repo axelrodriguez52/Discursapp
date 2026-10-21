@@ -1,0 +1,10 @@
+/* ==========================================================================
+   Ajustes necesarios al pasar el marcado a JSX.
+   React no admite `!important` dentro de un objeto `style`, asi que el unico
+   caso del HTML original se reproduce con una regla equivalente.
+   ========================================================================== */
+
+/* #bsq-bulk-block-btn llevaba style="background:var(--danger);border-color:var(--danger) !important" */
+#bsq-bulk-block-btn {
+  border-color: var(--danger) !important;
+}

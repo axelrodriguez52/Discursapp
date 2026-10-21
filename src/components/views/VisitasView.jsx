@@ -1,0 +1,11 @@
+/* ==========================================================================
+   VisitasView
+   Origen: DISCURSAPP .html (L3194-3207)
+   ========================================================================== */
+export default function VisitasView() {
+  return (
+    <>
+      <section id="view-visitas" className="view-section">{" "}<div id="print-title-entrantes" className="print-title">{"Circuito 16 — Registro de Visitas Entrantes"}</div>{" "}<div className="view-header">{" "}<div className="view-title"><h3>{"Visitas Entrantes"}</h3></div>{" "}<div className="actions-container">{" "}<select id="visitas-cong-selector" className="filter-select" onChange={(event) => { renderVisitasView() }}><option value="">{"— Seleccione Congregación —"}</option></select>{" "}<select id="visitas-month-selector" className="filter-select" onChange={(event) => { renderVisitasView() }}><option value="TODOS">{"— Todos los meses —"}</option><option value="enero">{"Enero"}</option><option value="febrero">{"Febrero"}</option><option value="marzo">{"Marzo"}</option><option value="abril">{"Abril"}</option><option value="mayo">{"Mayo"}</option><option value="junio">{"Junio"}</option><option value="julio">{"Julio"}</option><option value="agosto">{"Agosto"}</option><option value="septiembre">{"Septiembre"}</option><option value="octubre">{"Octubre"}</option><option value="noviembre">{"Noviembre"}</option><option value="diciembre">{"Diciembre"}</option></select>{" "}<button className="btn-print" id="btn-print-entrantes" onClick={(event) => { window.print() }} style={{ display: "none" }}>{"🖨️ Imprimir Reporte de Visitas"}</button>{" "}<button className="btn-print" id="btn-csv-entrantes" onClick={(event) => { exportarCSV('visitas') }} style={{ display: "none", background: "var(--success)" }}>{"⬇️ Exportar CSV"}</button>{" "}</div>{" "}</div>{" "}<div id="visitas-summary-bar" style={{ display: "none", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "14px", marginBottom: "16px", fontSize: "13px", animation: "fadeSlideIn 0.35s ease" }}></div>{" "}<div id="visitas-content"><div className="empty-state"><p>{"Selecciona los filtros para procesar el listado."}</p></div></div>{" "}</section>
+    </>
+  );
+}

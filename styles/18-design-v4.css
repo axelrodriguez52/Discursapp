@@ -1,0 +1,69 @@
+/* ==========================================================================
+   Capa de diseno v4 (vertical movil y contraste)
+   Origen: DISCURSAPP .html L2561
+   ========================================================================== */
+
+
+        /* ── Tinte del acento: permite degradados que se adaptan al tema ── */
+        :root { --accent-tint: rgba(0,113,227,0.05); }
+        html.dark-mode { --accent-tint: rgba(10,132,255,0.04); }
+
+        /* ── FIX: el degradado del panel de registro terminaba en un blanco fijo (#f0f9ff),
+              que en modo oscuro quedaba como una barra blanca ilegible. ── */
+        .registro-panel-header { background: linear-gradient(135deg, var(--accent-dim), var(--accent-tint)); }
+
+        /* ── FIX: en modo oscuro .btn-print heredaba color:var(--text-2) (gris) aunque su
+              fondo inline fuese sólido (rojo/verde/azul) -> texto ilegible. ── */
+        html.dark-mode .btn-print[style*="background:var(--danger)"],
+        html.dark-mode .btn-print[style*="background:var(--success)"],
+        html.dark-mode .btn-print[style*="background:var(--accent)"] { color: #fff; }
+
+        /* ══════════ PANTALLA VERTICAL EN MÓVILES (≤ 580px) ══════════ */
+        @media (max-width: 580px) {
+            /* Barras de herramientas sin anchos dispares ni huecos: 2 controles por fila */
+            .view-toolbar { gap: 8px !important; }
+            .view-toolbar > .search-wrap { flex: 1 1 100%; max-width: 100% !important; }
+            .view-toolbar > #search-counter { flex: 1 1 100%; }
+            .view-toolbar > .filter-select { flex: 1 1 45%; min-width: 0 !important; width: auto; font-size: 12px; padding-left: 10px; padding-right: 8px; }
+            .view-toolbar > .btn-print { flex: 1 1 45%; width: auto !important; margin-top: 0 !important; min-height: 44px; }
+
+            /* Bosquejos: filtro a lo ancho y los 4 botones en rejilla 2×2 limpia */
+            #view-bosquejos .view-toolbar > .filter-select { flex: 1 1 100%; }
+
+            /* Filas de filtro: cada control ocupa todo el ancho disponible (sin anchos
+               heredados en línea como max-width:140px o width:auto) */
+            .filter-row { gap: 10px !important; }
+            .filter-item { min-width: 100% !important; }
+            .filter-item > .search-input,
+            .filter-item > .filter-select {
+                flex: 1 1 auto; width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+            }
+
+            /* Resumen de roles: 3 columnas parejas, sin huérfano al final */
+            #rol-summary-bar {
+                display: grid !important; grid-template-columns: repeat(3, 1fr);
+                gap: 6px 4px !important; text-align: center; padding: 10px 8px !important;
+            }
+            #rol-summary-bar > span { font-size: 11px; white-space: nowrap; }
+
+            /* Tarjeta de orador compacta: mismo contenido, mucho menos scroll */
+            #cards-container .speaker-card { min-height: 0; padding: 14px 16px 12px; }
+            #cards-container .card-avatar-placeholder,
+            #cards-container .card-avatar { width: 44px; height: 44px; font-size: 17px; }
+            #cards-container .card-header { gap: 11px; }
+            #cards-container .card-name { font-size: 15.5px; }
+            #cards-container .card-cta { font-size: 11.5px; padding-top: 6px; }
+
+            /* Calendario: el filtro de congregación ocupa su propia fila */
+            #view-calendario .cal-toolbar > div:last-child { width: 100% !important; }
+            #view-calendario .cal-toolbar select { width: 100%; min-width: 0 !important; }
+
+            /* Eventos del calendario como puntos de color: el texto no cabe en 51px */
+            .cal-event-chip {
+                font-size: 0 !important; padding: 0 !important;
+                width: 7px; height: 7px; min-width: 7px; border-radius: 50%;
+                display: inline-block; vertical-align: middle; overflow: visible;
+            }
+            .cal-event-chip .cal-chip-avatar { display: none !important; }
+            .cal-event-chip:hover { transform: none; }
+        }

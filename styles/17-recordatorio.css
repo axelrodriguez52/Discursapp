@@ -1,0 +1,17 @@
+/* ==========================================================================
+   Estilos de la plantilla del recordatorio
+   Origen: DISCURSAPP .html L2546
+   ========================================================================== */
+
+
+        .rec-var-chip {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+            font-size: 11px; font-weight: 700; color: var(--accent);
+            background: var(--accent-dim); border: 1px solid var(--border);
+            border-radius: 8px; padding: 4px 8px; cursor: pointer;
+            transition: background .15s var(--ease), color .15s var(--ease), transform .15s var(--ease);
+        }
+        .rec-var-chip:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+        .rec-var-chip:active { transform: translateY(0); }
+        html.dark-mode .rec-var-chip { border-color: var(--border-hi); }
+        #modal-plantilla-recordatorio .modal-box { max-height:92vh; overflow-y:auto; }

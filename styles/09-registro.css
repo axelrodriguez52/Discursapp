@@ -1,0 +1,171 @@
+/* ==========================================================================
+   Panel de registro de asignacion, preseleccion y toast
+   Origen: DISCURSAPP .html L1570-1735
+   ========================================================================== */
+
+        /* ── PANEL DE REGISTRO DE ASIGNACIÓN ── */
+        .registro-panel {
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        .registro-panel-header {
+            padding: 16px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; user-select: none;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--accent-dim), #f0f9ff);
+        }
+        .registro-panel-header h4 {
+            font-size: 13px; font-weight: 700; color: var(--accent);
+            display: flex; align-items: center; gap: 8px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .registro-panel-body { padding: 20px; max-height: 3000px; opacity: 1; overflow: hidden; transition: max-height 0.45s var(--ease), opacity 0.3s var(--ease), padding 0.3s var(--ease); }
+        .registro-panel-body.collapsed { max-height: 0; opacity: 0; padding-top: 0; padding-bottom: 0; pointer-events: none; }
+
+        .reg-steps {
+            display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .reg-step {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 11px; font-weight: 700; color: var(--text-3);
+            padding: 5px 10px; border-radius: 20px;
+            background: var(--bg-card-alt); border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .reg-step.done   { background: var(--success-dim); color: var(--success); border-color: rgba(52, 199, 89,0.3); }
+        .reg-step.active { background: var(--accent-dim);  color: var(--accent);  border-color: rgba(0, 113, 227,0.3); }
+        .reg-step-num {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: currentColor; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 800; flex-shrink: 0;
+        }
+        .reg-step.done .reg-step-num::before   { content: '✓'; color: #fff; }
+        .reg-step.done .reg-step-num span      { display: none; }
+        .reg-step:not(.done) .reg-step-num span { color: #fff; }
+
+        .reg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+        @media (max-width: 700px) { .reg-grid { grid-template-columns: 1fr; } }
+
+        .reg-field { display: flex; flex-direction: column; gap: 6px; }
+        .reg-label {
+            font-size: 11px; font-weight: 700; color: var(--text-2);
+            text-transform: uppercase; letter-spacing: 0.4px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .reg-label-num {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: var(--accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 800; flex-shrink: 0;
+        }
+
+        .reg-select {
+            background: #fff; border: 1.5px solid var(--border-hi);
+            padding: 10px 12px; border-radius: var(--radius-sm);
+            color: var(--text-1); font-size: 13px;
+outline: none; cursor: pointer; transition: all 0.2s;
+            box-shadow: var(--shadow-sm); min-height: 42px; width: 100%;
+        }
+        .reg-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .reg-select:disabled { opacity: 0.5; cursor: not-allowed; background: var(--bg-card-alt); }
+
+        .reg-date {
+            background: #fff; border: 1.5px solid var(--border-hi);
+            padding: 10px 12px; border-radius: var(--radius-sm);
+            color: var(--text-1); font-size: 13px;
+outline: none; transition: all 0.2s; box-shadow: var(--shadow-sm);
+            min-height: 42px; width: 100%;
+        }
+        .reg-date:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .reg-date:disabled { opacity: 0.5; cursor: not-allowed; background: var(--bg-card-alt); }
+
+        /* Bosquejos seleccionables */
+        .reg-temas-grid {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            padding: 12px; background: var(--bg-card-alt);
+            border: 1.5px solid var(--border-hi); border-radius: var(--radius-sm);
+            min-height: 48px; align-items: flex-start; align-content: flex-start;
+        }
+        .reg-temas-grid.disabled { opacity: 0.5; pointer-events: none; }
+        .reg-tema-btn {
+            padding: 6px 12px; border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border-hi); background: #fff;
+            font-size: 12px; font-weight: 700; color: var(--text-2);
+            cursor: pointer; transition: all 0.15s;
+}
+        .reg-tema-btn:hover:not(.blocked) { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .reg-tema-btn.selected { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 2px 6px var(--accent-glow); }
+        .reg-tema-btn.blocked  { background: var(--danger-dim); color: var(--danger); border-color: rgba(255, 59, 48,0.3); cursor: not-allowed; font-size: 11px; }
+        .reg-temas-empty { font-size: 12px; color: var(--text-3); font-style: italic; padding: 4px 0; }
+
+        /* Resumen previo al registro */
+        .reg-summary {
+            background: var(--accent-dim); border: 1px solid rgba(0, 113, 227,0.2);
+            border-radius: var(--radius-sm); padding: 12px 16px;
+            font-size: 12.5px; color: var(--text-1); margin-bottom: 14px;
+            display: none; gap: 16px; flex-wrap: wrap; align-items: center;
+        }
+        .reg-summary.visible { display: flex; }
+        .reg-summary-item { display: flex; flex-direction: column; gap: 1px; }
+        .reg-summary-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--accent); letter-spacing: 0.4px; }
+        .reg-summary-val   { font-size: 13px; font-weight: 600; color: var(--text-1); }
+
+        .btn-registrar {
+            background: var(--accent-grad); color: #fff; border: none;
+            padding: 12px 28px; border-radius: var(--radius-sm);
+font-size: 13.5px; font-weight: 700;
+            cursor: pointer; transition: all 0.3s var(--ease); min-height: 44px;
+            display: inline-flex; align-items: center; gap: 8px;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-registrar:hover:not(:disabled) { background: var(--accent-grad-hover); box-shadow: var(--shadow-glow); transform: translateY(-3px) scale(1.02); }
+        .btn-registrar:active:not(:disabled) { transform: translateY(0) scale(0.97); transition-duration: 0.1s; }
+        .btn-registrar:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-registrar.loading { pointer-events: none; }
+
+        /* ── PRE-SELECCIÓN ── */
+        .preselect-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); margin-top: 18px; overflow: hidden; animation: slideUp 0.3s var(--ease); }
+        .preselect-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-card-alt); }
+        .preselect-header h4 { font-size: 13px; font-weight: 700; color: var(--text-1); margin: 0; display: flex; align-items: center; gap: 6px; }
+        .preselect-badge { background: var(--accent); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 10px; min-width: 20px; text-align: center; }
+        .preselect-list { max-height: 260px; overflow-y: auto; padding: 8px; }
+        .preselect-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 6px; background: var(--bg-app); transition: all 0.2s; animation: slideUp 0.2s var(--ease); }
+        .preselect-item:hover { border-color: var(--accent); background: var(--accent-dim); }
+        .preselect-item-info { flex: 1; min-width: 0; }
+        .preselect-item-name { font-size: 12px; font-weight: 700; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .preselect-item-detail { font-size: 10.5px; color: var(--text-3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .preselect-item-remove { width: 24px; height: 24px; border: none; background: transparent; color: var(--text-3); cursor: pointer; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+        .preselect-item-remove:hover { background: rgba(220,38,38,0.1); color: var(--danger); }
+        .preselect-actions { display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--bg-card-alt); }
+        .preselect-actions button { flex: 1; padding: 8px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .preselect-btn-add { background: var(--accent-dim); color: var(--accent); border-color: var(--accent) !important; }
+        .preselect-btn-add:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
+        .preselect-btn-add:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .preselect-btn-clear { background: var(--bg-card); color: var(--text-3); }
+        .preselect-btn-clear:hover { color: var(--danger); border-color: var(--danger); }
+        .preselect-btn-register { background: var(--accent); color: #fff; border-color: var(--accent) !important; }
+        .preselect-btn-register:hover { background: var(--accent-grad-hover); box-shadow: var(--shadow-glow); transform: translateY(-1px); }
+        .preselect-btn-register:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+        .preselect-progress { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 0 16px 10px; }
+        .preselect-progress-bar { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s var(--ease); }
+        .preselect-empty { text-align: center; padding: 20px; color: var(--text-3); font-size: 12px; font-style: italic; }
+
+        /* Toast de notificación */
+        .reg-toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px) scale(0.9);
+            background: var(--text-1); color: #fff; padding: 13px 24px;
+            border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+            box-shadow: var(--shadow-lg); z-index: 500;
+            transition: transform 0.5s var(--ease-bounce), opacity 0.35s var(--ease);
+            white-space: nowrap; display: flex; align-items: center; gap: 10px; opacity: 0;
+        }
+        .reg-toast.show { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+        .reg-toast.success { background: linear-gradient(135deg, #34c759, #059669); }
+        .reg-toast.error   { background: linear-gradient(135deg, #ff3b30, #dc2626); }
+        /* ── FIN PANEL REGISTRO ── */

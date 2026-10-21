@@ -1,0 +1,35 @@
+/* ==========================================================================
+   Accesibilidad, focus visible y objetivos tactiles
+   Origen: DISCURSAPP .html L1829-1858
+   ========================================================================== */
+
+        /* ══════════════════════════════════════════════
+           ACCESIBILIDAD Y MEJORAS DE UX
+        ══════════════════════════════════════════════ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus visible para navegacion por teclado */
+        .tab-btn:focus-visible, .upload-zone:focus-visible, .btn-google:focus-visible,
+        .btn-danger:focus-visible, .btn-print:focus-visible, .btn-registrar:focus-visible,
+        .sug-tab:focus-visible, .sug-action-btn:focus-visible, .btn-block:focus-visible,
+        .cal-nav-btn:focus-visible, .cal-view-btn:focus-visible, .btn-add-evento:focus-visible,
+        .mev-btn-save:focus-visible, .mev-btn-cancel:focus-visible, .mev-btn-delete:focus-visible,
+        .gf-nav:focus-visible, .reg-tema-btn:focus-visible,
+        .mdd-close:focus-visible, .modal-close:focus-visible, #photo-lightbox-close:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        /* Touch targets mas grandes */
+        .gf-nav { width: 36px; height: 36px; }
+        .cal-nav-btn { width: 40px; height: 40px; }
+        .mdd-close { width: 36px; height: 36px; }
+        .modal-close { width: 36px; height: 36px; }
+        .btn-add-evento { min-height: 40px; }
