@@ -2540,6 +2540,73 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
         html.dark-mode .rec-var-chip { border-color: var(--border-hi); }
         #modal-plantilla-recordatorio .modal-box { max-height:92vh; overflow-y:auto; }
     </style>
+
+    <!-- ═══ DISEÑO v4: visualización vertical (móvil) + correcciones de contraste ═══ -->
+    <style id="design-v4">
+        /* ── Tinte del acento: permite degradados que se adaptan al tema ── */
+        :root { --accent-tint: rgba(0,113,227,0.05); }
+        html.dark-mode { --accent-tint: rgba(10,132,255,0.04); }
+
+        /* ── FIX: el degradado del panel de registro terminaba en un blanco fijo (#f0f9ff),
+              que en modo oscuro quedaba como una barra blanca ilegible. ── */
+        .registro-panel-header { background: linear-gradient(135deg, var(--accent-dim), var(--accent-tint)); }
+
+        /* ── FIX: en modo oscuro .btn-print heredaba color:var(--text-2) (gris) aunque su
+              fondo inline fuese sólido (rojo/verde/azul) -> texto ilegible. ── */
+        html.dark-mode .btn-print[style*="background:var(--danger)"],
+        html.dark-mode .btn-print[style*="background:var(--success)"],
+        html.dark-mode .btn-print[style*="background:var(--accent)"] { color: #fff; }
+
+        /* ══════════ PANTALLA VERTICAL EN MÓVILES (≤ 580px) ══════════ */
+        @media (max-width: 580px) {
+            /* Barras de herramientas sin anchos dispares ni huecos: 2 controles por fila */
+            .view-toolbar { gap: 8px !important; }
+            .view-toolbar > .search-wrap { flex: 1 1 100%; max-width: 100% !important; }
+            .view-toolbar > #search-counter { flex: 1 1 100%; }
+            .view-toolbar > .filter-select { flex: 1 1 45%; min-width: 0 !important; width: auto; font-size: 12px; padding-left: 10px; padding-right: 8px; }
+            .view-toolbar > .btn-print { flex: 1 1 45%; width: auto !important; margin-top: 0 !important; min-height: 44px; }
+
+            /* Bosquejos: filtro a lo ancho y los 4 botones en rejilla 2×2 limpia */
+            #view-bosquejos .view-toolbar > .filter-select { flex: 1 1 100%; }
+
+            /* Filas de filtro: cada control ocupa todo el ancho disponible (sin anchos
+               heredados en línea como max-width:140px o width:auto) */
+            .filter-row { gap: 10px !important; }
+            .filter-item { min-width: 100% !important; }
+            .filter-item > .search-input,
+            .filter-item > .filter-select {
+                flex: 1 1 auto; width: 100% !important; max-width: 100% !important; min-width: 0 !important;
+            }
+
+            /* Resumen de roles: 3 columnas parejas, sin huérfano al final */
+            #rol-summary-bar {
+                display: grid !important; grid-template-columns: repeat(3, 1fr);
+                gap: 6px 4px !important; text-align: center; padding: 10px 8px !important;
+            }
+            #rol-summary-bar > span { font-size: 11px; white-space: nowrap; }
+
+            /* Tarjeta de orador compacta: mismo contenido, mucho menos scroll */
+            #cards-container .speaker-card { min-height: 0; padding: 14px 16px 12px; }
+            #cards-container .card-avatar-placeholder,
+            #cards-container .card-avatar { width: 44px; height: 44px; font-size: 17px; }
+            #cards-container .card-header { gap: 11px; }
+            #cards-container .card-name { font-size: 15.5px; }
+            #cards-container .card-cta { font-size: 11.5px; padding-top: 6px; }
+
+            /* Calendario: el filtro de congregación ocupa su propia fila */
+            #view-calendario .cal-toolbar > div:last-child { width: 100% !important; }
+            #view-calendario .cal-toolbar select { width: 100%; min-width: 0 !important; }
+
+            /* Eventos del calendario como puntos de color: el texto no cabe en 51px */
+            .cal-event-chip {
+                font-size: 0 !important; padding: 0 !important;
+                width: 7px; height: 7px; min-width: 7px; border-radius: 50%;
+                display: inline-block; vertical-align: middle; overflow: visible;
+            }
+            .cal-event-chip .cal-chip-avatar { display: none !important; }
+            .cal-event-chip:hover { transform: none; }
+        }
+    </style>
 </head>
 <body>
     <!-- Pantalla de inicio -->
@@ -2718,7 +2785,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                     <h3>Editar Discursantes</h3>
                     <p id="editor-subtitle">Selecciona una Congregación Matriz en el menú lateral para editar sus discursantes.</p>
                 </div>
-                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <div class="view-toolbar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                     <button class="btn-print" id="btn-add-speaker" onclick="openSpeakerForm(null)" style="display:none;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Agregar Discursante
@@ -2739,7 +2806,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                     <h3>Oradores del Circuito</h3>
                     <p>Busca por nombre o número/título de bosquejo.</p>
                 </div>
-                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <div class="view-toolbar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                     <div class="search-wrap">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                         <input type="text" id="search-input" class="search-input" placeholder="Buscar orador, rol o tema…">
@@ -2941,7 +3008,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                         <h3 style="margin:0;font-size:18px;font-weight:700;color:var(--text-1);">📋 Listado por Congregación</h3>
                         <p style="margin:4px 0 0;font-size:12.5px;color:var(--text-3);">Disponibilidad anual y ficha técnica de cada discursante. Imprime el listado filtrado.</p>
                     </div>
-                    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <div class="view-toolbar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                         <select id="disp-cong-filter" class="filter-select" onchange="renderDispCongView()"><option value="TODOS">— Todas las congregaciones —</option></select>
                         <input type="text" id="disp-speaker-search" class="search-input" placeholder="Buscar discursante…" oninput="debouncedRenderDispCongView()" style="max-width:220px;">
                         <button class="btn-print" onclick="printDispCongView()">🖨️ Imprimir Listado</button>
@@ -3148,7 +3215,7 @@ font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
                     <h3>Catálogo de Bosquejos</h3>
                     <p>Consulta todos los bosquejos. Marca en rojo los que no están disponibles y define desde qué mes aplica la restricción.</p>
                 </div>
-                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <div class="view-toolbar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                     <div class="search-wrap" style="max-width:280px;">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                         <input type="text" id="bosquejos-search" class="search-input" placeholder="Buscar por # o título…" oninput="debouncedRenderBosquejosView()">
