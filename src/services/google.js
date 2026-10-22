@@ -114,7 +114,7 @@ function iniciarGisi() {
                     await cargarDesdeGoogleSheets();
                 } catch (err) {
                     console.error('Error al sincronizar tras el inicio de sesión:', err);
-                    registrarDiagnosticoSync({ ok: false, phase: 'sync', error: mensajeErrorSync(err) });
+                    registrarDiagnosticoSync({ ok: false, pending: false, phase: 'sync', error: mensajeErrorSync(err) });
                     mostrarToast('❌ No se pudieron cargar los datos: ' + mensajeErrorSync(err), 'error');
                     const st = document.getElementById('status-text');
                     if (st) st.innerText = 'Error — reconectar';

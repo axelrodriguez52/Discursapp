@@ -154,7 +154,7 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
         if (btnOk) btnOk.textContent = '✓ Sincronizado';
         const mobOk = document.getElementById('btn-google-login-mob');
         if (mobOk) mobOk.textContent = '✓ Sincronizado';
-        registrarDiagnosticoSync({ ok: true, phase: 'ok', speakers: globalSpeakers.length, assignments: allAssignments.length, contacts: Object.keys(contactsMap || {}).length, sheets: sheetTitles.length, error: '' });
+        registrarDiagnosticoSync({ ok: true, pending: false, phase: 'ok', speakers: globalSpeakers.length, assignments: allAssignments.length, contacts: Object.keys(contactsMap || {}).length, sheets: sheetTitles.length, error: '' });
         mostrarToast(`✓ Google Sheets: ${globalSpeakers.length} oradores, ${allAssignments.length} asignaciones`, 'success');
         batchRender(renderEstadisticasDashboard, renderCards);
         // Inicializar wizard de registro si la pestaña está activa
@@ -169,7 +169,7 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
         if (btnErr) btnErr.textContent = '🔄 Reintentar sincronización';
         const mobErr = document.getElementById('btn-google-login-mob');
         if (mobErr) mobErr.textContent = '🔄 Reintentar';
-        registrarDiagnosticoSync({ ok: false, phase: 'sheets', error: mensajeErrorSync(err) });
+        registrarDiagnosticoSync({ ok: false, pending: false, phase: 'sheets', error: mensajeErrorSync(err) });
         mostrarToast('❌ No se pudieron cargar los datos: ' + mensajeErrorSync(err), 'error');
         borrarTokenGuardado();
         throw err; // re-lanzar para que verificarLibreriasListas pueda manejarlo

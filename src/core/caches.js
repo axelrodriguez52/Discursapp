@@ -11,6 +11,15 @@ let _cachedAssignmentsByName = new Map();
 
 let _cacheDirty = true;
 
+// En la migración a módulos, otros archivos (sheets.js, excel.js, months.js)
+// hacen `_cacheDirty = true`. Eso actualiza la copia publicada en window, no
+// esta variable local del módulo. Comprobamos ambas para que la caché se
+// reconstruya de verdad después de sincronizar Google Sheets o cargar Excel.
+function _cacheNecesitaReconstruccion() {
+    return _cacheDirty === true ||
+        (typeof window !== 'undefined' && window._cacheDirty === true);
+}
+
 function rebuildCaches() {
     _cachedUnique = Array.from(new Map(globalSpeakers.map(s => [s.nombre + '|' + s.congregacion, s])).values());
     _cachedPhotoKeys = {};
@@ -24,13 +33,19 @@ function rebuildCaches() {
         _cachedAssignmentsByName.get(key).push(a);
     });
     _cacheDirty = false;
+    if (typeof window !== 'undefined') {
+        window._cacheDirty = false;
+        window._cachedUnique = _cachedUnique;
+        window._cachedPhotoKeys = _cachedPhotoKeys;
+        window._cachedAssignmentsByName = _cachedAssignmentsByName;
+    }
 }
 
-function getUnique() { if (_cacheDirty) rebuildCaches(); return _cachedUnique; }
+function getUnique() { if (_cacheNecesitaReconstruccion()) rebuildCaches(); return _cachedUnique; }
 
-function getPhotoKey(nombre, congregacion) { if (_cacheDirty) rebuildCaches(); return _cachedPhotoKeys[nombre + '|' + congregacion] || ''; }
+function getPhotoKey(nombre, congregacion) { if (_cacheNecesitaReconstruccion()) rebuildCaches(); return _cachedPhotoKeys[nombre + '|' + congregacion] || ''; }
 
-function getAssignmentsFor(nombre) { if (_cacheDirty) rebuildCaches(); return _cachedAssignmentsByName.get(normalizeStr(nombre)) || []; }
+function getAssignmentsFor(nombre) { if (_cacheNecesitaReconstruccion()) rebuildCaches(); return _cachedAssignmentsByName.get(normalizeStr(nombre)) || []; }
 
 // ── Puente con el resto de la app ───────────────────────────────────────────
 // El script original era un unico ambito global. Se conserva ese contrato para
