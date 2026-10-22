@@ -12,5 +12,9 @@
     "next": "16.4.2",
     "react": "19.3.1",
     "react-dom": "19.3.1"
-  }
+  },
+  "browserslist": [
+    "safari 15.4",
+    "ios_saf 15.4"
+  ]
 }
