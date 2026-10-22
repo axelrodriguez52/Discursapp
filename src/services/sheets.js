@@ -149,7 +149,13 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
         poblarMatrizCongSelector();
 
         document.getElementById('status-text').innerText = 'Sincronizado ✓';
-        guardarAsignacionesLocal(allAssignments);
+        try { guardarAsignacionesLocal(allAssignments); } catch (e) { console.error('No se pudieron guardar las asignaciones localmente:', e); }
+        const btnOk = document.getElementById('btn-google-login');
+        if (btnOk) btnOk.textContent = '✓ Sincronizado';
+        const mobOk = document.getElementById('btn-google-login-mob');
+        if (mobOk) mobOk.textContent = '✓ Sincronizado';
+        registrarDiagnosticoSync({ ok: true, phase: 'ok', speakers: globalSpeakers.length, assignments: allAssignments.length, contacts: Object.keys(contactsMap || {}).length, sheets: sheetTitles.length, error: '' });
+        mostrarToast(`✓ Google Sheets: ${globalSpeakers.length} oradores, ${allAssignments.length} asignaciones`, 'success');
         batchRender(renderEstadisticasDashboard, renderCards);
         // Inicializar wizard de registro si la pestaña está activa
         inicializarWizardSiActivo();
@@ -159,6 +165,12 @@ document.getElementById('aguayo-origin-selector').innerHTML = '<option value="TO
         console.error("Error al leer datos de Google Sheets:", err);
         document.getElementById('status-dot').className = 'sync-dot offline';
         document.getElementById('status-text').innerText = 'Error — reconectar';
+        const btnErr = document.getElementById('btn-google-login');
+        if (btnErr) btnErr.textContent = '🔄 Reintentar sincronización';
+        const mobErr = document.getElementById('btn-google-login-mob');
+        if (mobErr) mobErr.textContent = '🔄 Reintentar';
+        registrarDiagnosticoSync({ ok: false, phase: 'sheets', error: mensajeErrorSync(err) });
+        mostrarToast('❌ No se pudieron cargar los datos: ' + mensajeErrorSync(err), 'error');
         borrarTokenGuardado();
         throw err; // re-lanzar para que verificarLibreriasListas pueda manejarlo
     } finally {
@@ -381,6 +393,21 @@ cargarDesdeGoogleSheets = async function() {
     // que inyecta actualizaciones de progreso en status-text.
     // Como no podemos parchear el loop interno fácilmente, usamos
     // un proxy en gapi.client.sheets.spreadsheets.values.get
+    if (!gapi?.client?.sheets?.spreadsheets?.values?.get || !gapi?.client?.sheets?.spreadsheets?.get) {
+        const err = new Error('La librería de Google aún no está lista. Espera unos segundos y vuelve a intentar.');
+        console.error('cargarDesdeGoogleSheets:', err.message);
+        registrarDiagnosticoSync({ ok: false, phase: 'gapi-no-listo', error: err.message });
+        const st = document.getElementById('status-text');
+        if (st) st.innerText = 'Error — reintentar';
+        const dot = document.getElementById('status-dot');
+        if (dot) dot.className = 'sync-dot offline';
+        const btn = document.getElementById('btn-google-login');
+        if (btn) btn.textContent = '🔄 Reintentar sincronización';
+        const mob = document.getElementById('btn-google-login-mob');
+        if (mob) mob.textContent = '🔄 Reintentar';
+        mostrarToast('⚠️ ' + err.message, 'error');
+        throw err;
+    }
     let sheetCount = 0;
     let totalSheets = 0;
     const origGet = gapi.client.sheets.spreadsheets.values.get.bind(gapi.client.sheets.spreadsheets.values);
