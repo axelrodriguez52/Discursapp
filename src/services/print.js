@@ -166,6 +166,10 @@ function printMonthView() {
         const temaNum = parseInt(temaVal, 10).toString();
         pool = pool.filter(s => (s.temas || []).includes(temaNum));
     }
+    const rolSel = (document.getElementById('month-rol-filter')?.value || '').trim();
+    if (rolSel) pool = pool.filter(s => (s.rol || '').trim() === rolSel);
+    const congSel = (document.getElementById('month-cong-filter')?.value || '').trim();
+    if (congSel) pool = pool.filter(s => (s.congregacion || '').trim() === congSel);
     if (statusFilter === 'LIBRE') {
         pool = pool.filter(s => !getAssignmentsFor(s.nombre).some(a => a.fecha.toLowerCase().includes(mesPrefix)));
     } else if (statusFilter === 'ASIGNADO') {

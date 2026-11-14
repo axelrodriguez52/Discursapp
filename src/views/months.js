@@ -763,12 +763,32 @@ function inicializarWizardSiActivo() {
     actualizarSteps();
 }
 
+// Filtros de rol y congregación del listado "Discursantes Disponibles"
+function populateMonthRolCongFilters(unique) {
+    const fill = (id, allLabel, values) => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        const sig = values.join('\u0001');
+        if (sel.dataset.sig === sig) return;
+        const current = sel.value;
+        sel.innerHTML = `<option value="">${allLabel}</option>` +
+            values.map(v => `<option value="${escHtml(v)}">${escHtml(v)}</option>`).join('');
+        sel.value = values.includes(current) ? current : '';
+        sel.dataset.sig = sig;
+    };
+    fill('month-rol-filter', '— Todos los roles —',
+        [...new Set(unique.map(s => s.rol?.trim()).filter(Boolean))].sort());
+    fill('month-cong-filter', '— Todas las congregaciones —',
+        [...new Set(unique.map(s => s.congregacion?.trim()).filter(Boolean))].sort());
+}
+
 function renderMonthView() {
     const m = document.getElementById('month-selector').value;
     const tbody = document.getElementById('month-table-body');
     const searchVal = normalizeStr((document.getElementById('month-speaker-search')?.value || '').trim());
     const statusFilter = document.getElementById('month-status-filter')?.value || 'TODOS';
     const unique = getUnique();
+    populateMonthRolCongFilters(unique);
     let pool = unique.filter(s => {
         const d = (s.disponibilidad[m] || '').toLowerCase();
         return d === 'disponible' || d === 'asignado';
@@ -799,6 +819,10 @@ function renderMonthView() {
         const temaNum = parseInt(temaVal, 10).toString();
         pool = pool.filter(s => (s.temas || []).includes(temaNum));
     }
+    const rolSel = (document.getElementById('month-rol-filter')?.value || '').trim();
+    if (rolSel) pool = pool.filter(s => (s.rol || '').trim() === rolSel);
+    const congSel = (document.getElementById('month-cong-filter')?.value || '').trim();
+    if (congSel) pool = pool.filter(s => (s.congregacion || '').trim() === congSel);
     if (statusFilter === 'LIBRE') {
         pool = pool.filter(s => !getAssignmentsFor(s.nombre).some(a => a.fecha.toLowerCase().includes(mesPrefix)));
     } else if (statusFilter === 'ASIGNADO') {
