@@ -2,11 +2,11 @@
    Todos los oradores: tarjetas, filtros, calificaciones y ausencias
    Origen: DISCURSAPP .html, script principal (L7137-9684)
    ========================================================================== */
-// Botón de WhatsApp de la tarjeta de orador (solo si hay un teléfono válido)
+// Teléfono + botón de WhatsApp dentro de la tarjeta de orador (solo si hay un número válido)
 function waCardBtn(s) {
     const n = typeof waNumero === 'function' ? waNumero(s.telefono) : '';
     if (!n) return '';
-    return `<button type="button" class="btn-mini" title="Escribir por WhatsApp" onclick="abrirWhatsAppTel('${escJs(s.telefono)}',event)" style="margin-left:auto;background:#25D366;color:#fff;border:none;font-weight:700;">💬 WhatsApp</button>`;
+    return `<div class="card-tel" style="display:flex;align-items:center;gap:8px;margin-top:4px;font-size:12px;color:var(--text-2);flex-wrap:wrap;"><span>📞 ${escHtml(s.telefono)}</span><button type="button" class="btn-mini" title="Escribir por WhatsApp" onclick="abrirWhatsAppTel('${escJs(s.telefono)}',event)" style="background:#25D366;color:#fff;border:none;font-weight:700;">💬 WhatsApp</button></div>`;
 }
 
 function populateRolFilter() {
@@ -71,10 +71,10 @@ function renderCards() {
                         <div class="card-info">
                             <div class="card-role">${escHtml(s.rol)}${badge}</div>
                             <div class="card-name">${escHtml(s.nombre)}</div>
-                            <div class="card-cong">${escHtml(s.congregacion)}</div>
+                            <div class="card-cong">${escHtml(s.congregacion)}</div>${waCardBtn(s)}
                         </div>
                     </div>
-                    <div class="card-cta">Ver detalles <span>→</span>${waCardBtn(s)}</div>
+                    <div class="card-cta">Ver detalles <span>→</span></div>
                 </div>`;
             }).join('') || `<div class="empty-state"><p>Sin oradores con el rol seleccionado.</p></div>`;
         } else {
@@ -114,11 +114,11 @@ function renderCards() {
                 <div class="card-info">
                     <div class="card-role">${escHtml(s.rol)}</div>
                     <div class="card-name">${escHtml(s.nombre)}</div>
-                    <div class="card-cong">${escHtml(s.congregacion)}</div>
+                    <div class="card-cong">${escHtml(s.congregacion)}</div>${waCardBtn(s)}
                     <div class="card-themes-preview">${themeBadges}</div>
                 </div>
             </div>
-            <div class="card-cta">Ver detalles <span>→</span>${waCardBtn(s)}</div>
+            <div class="card-cta">Ver detalles <span>→</span></div>
         </div>`;
     });
     container.innerHTML = html || `<div class="empty-state"><p>Sin coincidencias.</p></div>`;
