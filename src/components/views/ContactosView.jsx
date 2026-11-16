@@ -54,6 +54,15 @@ function ContactoCard({ entry }) {
             <div className="contact-label">Teléfono</div>
             <div className="contact-value" style={{ color: 'var(--accent)', fontWeight: 600 }}>{telefono}</div>
           </div>
+          {typeof window !== 'undefined' && window.waNumero && window.waNumero(telefono) ? (
+            <button
+              onClick={(event) => window.abrirWhatsAppTel(telefono, event)}
+              title="Escribir al encargado por WhatsApp"
+              style={{ marginLeft: 'auto', padding: '5px 10px', borderRadius: 'var(--radius-sm)', border: 'none', background: '#25D366', color: '#fff', fontSize: 11, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}
+            >
+              💬 WhatsApp
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="contact-footer">

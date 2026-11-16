@@ -763,6 +763,20 @@ function inicializarWizardSiActivo() {
     actualizarSteps();
 }
 
+// ── WhatsApp: normaliza el teléfono (RD: 10 dígitos → prefijo 1) y abre wa.me ──
+function waNumero(tel) {
+    const m = String(tel || '').match(/\+?\d[\d\s().-]{8,}\d/);
+    let d = m ? m[0].replace(/\D/g, '') : '';
+    if (d.length === 10) d = '1' + d;
+    return d.length >= 11 ? d : '';
+}
+function abrirWhatsAppTel(tel, ev) {
+    if (ev) { ev.stopPropagation(); ev.preventDefault(); }
+    const n = waNumero(tel);
+    if (!n) { mostrarToast('Número de teléfono no válido para WhatsApp.', 'error'); return; }
+    window.open('https://wa.me/' + n, '_blank');
+}
+
 // Filtros de rol y congregación del listado "Discursantes Disponibles"
 function populateMonthRolCongFilters(unique) {
     const fill = (id, allLabel, values) => {
@@ -844,7 +858,7 @@ function renderMonthView() {
             <td><div style="display:flex;align-items:center;gap:8px;">${getPhotoMini(s.nombre,s.congregacion)}<b>${escHtml(s.nombre)}</b>${ratingBadgeHtml(getSpeakerRating(s.nombre,s.congregacion),true)}</div></td>
             <td>${escHtml(s.rol)}</td>
             <td>${escHtml(s.congregacion)}</td>
-            <td>${escHtml(s.telefono)}</td>
+            <td>${(!tieneAsig && waNumero(s.telefono)) ? `<a href="https://wa.me/${waNumero(s.telefono)}" target="_blank" rel="noopener" title="Escribir por WhatsApp" onclick="abrirWhatsAppTel('${escJs(s.telefono)}',event)" style="color:#128C7E;font-weight:600;text-decoration:none;">💬 ${escHtml(s.telefono)}</a>` : escHtml(s.telefono)}</td>
             <td>${estadoBadge}</td>
         </tr>`;
     }).join('');
@@ -987,6 +1001,8 @@ function undoLastRegistro() {
 // El script original era un unico ambito global. Se conserva ese contrato para
 // no alterar el comportamiento; cada modulo publica solo lo que necesita.
 Object.assign(window, {
+  waNumero,
+  abrirWhatsAppTel,
   onMesChange,
   toggleRegistroPanel,
   onRegMesChange,
