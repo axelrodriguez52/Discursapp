@@ -2,6 +2,13 @@
    Todos los oradores: tarjetas, filtros, calificaciones y ausencias
    Origen: DISCURSAPP .html, script principal (L7137-9684)
    ========================================================================== */
+// Botón de WhatsApp de la tarjeta de orador (solo si hay un teléfono válido)
+function waCardBtn(s) {
+    const n = typeof waNumero === 'function' ? waNumero(s.telefono) : '';
+    if (!n) return '';
+    return `<button type="button" class="btn-mini" title="Escribir por WhatsApp" onclick="abrirWhatsAppTel('${escJs(s.telefono)}',event)" style="margin-left:auto;background:#25D366;color:#fff;border:none;font-weight:700;">💬 WhatsApp</button>`;
+}
+
 function populateRolFilter() {
     const sel = document.getElementById('rol-filter');
     if (!sel || !globalSpeakers.length) return;
@@ -67,7 +74,7 @@ function renderCards() {
                             <div class="card-cong">${escHtml(s.congregacion)}</div>
                         </div>
                     </div>
-                    <div class="card-cta">Ver detalles <span>→</span></div>
+                    <div class="card-cta">Ver detalles <span>→</span>${waCardBtn(s)}</div>
                 </div>`;
             }).join('') || `<div class="empty-state"><p>Sin oradores con el rol seleccionado.</p></div>`;
         } else {
@@ -111,7 +118,7 @@ function renderCards() {
                     <div class="card-themes-preview">${themeBadges}</div>
                 </div>
             </div>
-            <div class="card-cta">Ver detalles <span>→</span></div>
+            <div class="card-cta">Ver detalles <span>→</span>${waCardBtn(s)}</div>
         </div>`;
     });
     container.innerHTML = html || `<div class="empty-state"><p>Sin coincidencias.</p></div>`;
