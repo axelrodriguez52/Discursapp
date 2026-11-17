@@ -1327,6 +1327,22 @@ function renderEstadisticasDashboard() {
 
         const totalSug = temasList.length;
 
+        // Poco solicitados en el circuito: bosquejos con orador asignado y pocas solicitudes (cuartil inferior)
+        const candidatosRaros = Object.entries(themesMap)
+            .filter(([num]) => temasConOrador.has(String(num).trim()))
+            .filter(([num]) => !temasPresentados.has(String(num).trim()))
+            .map(([num, titulo]) => ({
+                num, titulo,
+                solicitudes: temasCountGlobal[num] || 0,
+                oradores: speakersByTemaLocal.get(String(num).trim()) || []
+            }));
+        const conteos = candidatosRaros.map(t => t.solicitudes).sort((x, y) => x - y);
+        const corteRaro = conteos.length ? conteos[Math.floor((conteos.length - 1) * 0.25)] : 0;
+        const pocoSolicitados = candidatosRaros
+            .filter(t => t.solicitudes <= corteRaro && t.oradores.length > 0)
+            .sort((x, y) => x.solicitudes - y.solicitudes || y.oradores.length - x.oradores.length)
+            .slice(0, 15);
+
         window._sugBosquejos = { nunca, masDeAnno };
 
         return `<div class="stat-card" id="stat-sugbosquejos" onclick="toggleStatCard(this)">
@@ -1377,6 +1393,17 @@ function renderEstadisticasDashboard() {
                         </div>`;
                     }).join('') : '<div class="stat-no-data">No hay bosquejos pendientes para sugerir</div>'}
                 </div>
+                ${pocoSolicitados.length ? `<div class="stat-card-divider"></div>
+                <div style="font-size:11px;font-weight:700;color:var(--accent);margin:4px 0 6px;text-transform:uppercase;letter-spacing:0.5px;">🔎 Poco solicitados en el circuito (${pocoSolicitados.length})</div>
+                <div class="stat-card-list">
+                    ${pocoSolicitados.map((t, i) => `<div class="stat-list-row">
+                        <span class="stat-list-pos">${i + 1}</span>
+                        <div class="stat-list-info">
+                            <div class="stat-list-name">#${escHtml(t.num)} — ${escHtml(t.titulo || 'Sin título')}</div>
+                            <div class="stat-list-sub">${t.solicitudes === 0 ? 'Nunca solicitado' : t.solicitudes + ' solicitud' + (t.solicitudes !== 1 ? 'es' : '')} · ${t.oradores.slice(0, 2).map(o => escHtml(o.nombre)).join(', ')}${t.oradores.length > 2 ? ' +' + (t.oradores.length - 2) : ''}</div>
+                        </div>
+                    </div>`).join('')}
+                </div>` : ''}
             </div>
         </div>`;
     })();
