@@ -74,7 +74,7 @@ function renderCards() {
                             <div class="card-cong">${escHtml(s.congregacion)}</div>${waCardBtn(s)}
                         </div>
                     </div>
-                    <div class="card-cta">Ver detalles <span>→</span></div>
+                    <div class="card-cta">Ver detalles <span>→</span><button type="button" class="btn-mini" title="Descargar itinerario de salidas en PDF" onclick="event.stopPropagation();exportarItinerarioOrador('${escJs(s.nombre)}','${escJs(s.congregacion)}')" style="margin-left:auto;">📄 Itinerario PDF</button></div>
                 </div>`;
             }).join('') || `<div class="empty-state"><p>Sin oradores con el rol seleccionado.</p></div>`;
         } else {
@@ -118,7 +118,7 @@ function renderCards() {
                     <div class="card-themes-preview">${themeBadges}</div>
                 </div>
             </div>
-            <div class="card-cta">Ver detalles <span>→</span></div>
+            <div class="card-cta">Ver detalles <span>→</span><button type="button" class="btn-mini" title="Descargar itinerario de salidas en PDF" onclick="event.stopPropagation();exportarItinerarioOrador('${escJs(s.nombre)}','${escJs(s.congregacion)}')" style="margin-left:auto;">📄 Itinerario PDF</button></div>
         </div>`;
     });
     container.innerHTML = html || `<div class="empty-state"><p>Sin coincidencias.</p></div>`;

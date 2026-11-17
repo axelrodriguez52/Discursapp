@@ -247,6 +247,75 @@ function openPdfWindow(html) {
     return win;
 }
 
+// ── Itinerario de salidas de un orador (PDF vía diálogo de impresión) ──────
+function exportarItinerarioOrador(nombre, congregacion) {
+    const sp = getUnique().find(x => x.nombre === nombre && x.congregacion === congregacion)
+        || getUnique().find(x => normalizeStr(x.nombre) === normalizeStr(nombre));
+    if (!sp) { mostrarToast('Orador no encontrado.', 'error'); return; }
+    const outs = allAssignments
+        .filter(a => normalizeStr(a.nombre) === normalizeStr(sp.nombre) && normalizeStr(a.origen) === normalizeStr(sp.congregacion))
+        .sort((a, b) => (a._date ? +a._date : 0) - (b._date ? +b._date : 0));
+    if (!outs.length) { mostrarToast('Este orador no tiene salidas asignadas.', 'error'); return; }
+
+    const now = new Date().toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' });
+    const th = 'padding:6px 8px;text-align:left;border:1px solid #ccc;font-size:10px;background:#f5f5f7;';
+    const td = 'padding:6px 8px;border:1px solid #ddd;font-size:11px;vertical-align:top;';
+    const rows = outs.map((o, i) => {
+        const ct = contactsMap[normalizeStr(o.destino)] || {};
+        const tel = ct.telefono && ct.telefono !== '—' ? ct.telefono : '';
+        const abs = isAbsent(o) ? getAbsenceInfo(o) : null;
+        let estado = 'Asignada';
+        if (abs) {
+            estado = abs.sustituto
+                ? 'Sustituido por ' + String(abs.sustituto).split('|')[0] + (abs.temaSust ? ' (#' + abs.temaSust + ')' : '')
+                : 'Ausente';
+            if (abs.motivo) estado += ' — ' + abs.motivo;
+        }
+        const color = abs ? (abs.sustituto ? '#16a34a' : '#dc2626') : '#111';
+        return `<tr>
+            <td style="${td}text-align:center;">${i + 1}</td>
+            <td style="${td}"><b>${escHtml(o.fecha || '—')}</b>${o.mes ? '<br><span style="color:#888;">' + escHtml(o.mes) + '</span>' : ''}</td>
+            <td style="${td}">${escHtml(o.hora || '—')}</td>
+            <td style="${td}"><b>${escHtml(o.destino || '—')}</b></td>
+            <td style="${td}">${o.temaNum ? '#' + escHtml(String(o.temaNum)) + ' ' + escHtml(themesMap[o.temaNum] || '') : '—'}</td>
+            <td style="${td}">${escHtml(ct.encargado && ct.encargado !== 'No registrado' ? ct.encargado : '—')}${tel ? '<br>' + escHtml(tel) : ''}</td>
+            <td style="${td}color:${color};font-weight:600;">${escHtml(estado)}</td>
+        </tr>`;
+    }).join('');
+
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Itinerario — ${escHtml(sp.nombre)}</title>
+        <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 20px; color: #1d1d1f; margin: 0; }
+            h1 { font-size: 18px; text-align: center; margin: 0 0 2px; }
+            p.sub { text-align: center; font-size: 11px; color: #86868b; margin: 0 0 4px; }
+            p.date { text-align: center; font-size: 10px; color: #aaa; margin: 0 0 14px; }
+            .info { font-size: 12px; margin: 0 0 14px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; line-height: 1.6; }
+            table { width: 100%; border-collapse: collapse; }
+            tr { page-break-inside: avoid; }
+            @media print { body { padding: 10px; } @page { margin: 10mm; } }
+        </style></head><body>
+        <h1>Circuito 16 — Itinerario de salidas</h1>
+        <p class="sub">${escHtml(sp.nombre)}</p>
+        <p class="date">${now}</p>
+        <div class="info">
+            <b>Orador:</b> ${escHtml(sp.nombre)}${sp.rol ? ' · ' + escHtml(sp.rol) : ''}<br>
+            <b>Congregación de origen:</b> ${escHtml(sp.congregacion)}<br>
+            ${sp.telefono && sp.telefono !== '—' ? '<b>Teléfono:</b> ' + escHtml(sp.telefono) + '<br>' : ''}
+            <b>Total de salidas:</b> ${outs.length}
+        </div>
+        <table>
+            <thead><tr>
+                <th style="${th}">#</th><th style="${th}">Fecha</th><th style="${th}">Hora</th>
+                <th style="${th}">Destino</th><th style="${th}">Discurso</th>
+                <th style="${th}">Coordinador destino</th><th style="${th}">Estado</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+        </table>
+        </body></html>`;
+    const win = openPdfWindow(html);
+    if (win) { win.focus(); setTimeout(() => { try { win.print(); } catch (e) {} }, 500); }
+}
+
 // ── Puente con el resto de la app ───────────────────────────────────────────
 // El script original era un unico ambito global. Se conserva ese contrato para
 // no alterar el comportamiento; cada modulo publica solo lo que necesita.
@@ -254,4 +323,5 @@ Object.assign(window, {
   printDispCongView,
   printMonthView,
   openPdfWindow,
+  exportarItinerarioOrador,
 });
